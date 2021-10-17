@@ -1,11 +1,13 @@
 package com.example.bcapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -17,6 +19,8 @@ import com.example.bcapp.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +47,93 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        // --LOADING--
+        String serverIp = "3.17.109.211";
+        Context ctx = getApplicationContext();
+        BlockChain bc = new BlockChain(ctx, serverIp);
+        if(!bc.checkInitChainComplete()){
+            if(!bc.createConfig()){
+                return;
+            }
+        }
+        bc.startNode();
+        int a=1;
+        class NewRunnable implements Runnable {
+            Account ac = new Account(getApplicationContext(), serverIp);
+            @Override
+            public void run() {
+                // --CREATE_ACCOUNT--
+                while(bc.checkNodeStarted() == false);
+
+                while(bc.checkNodeSync() == false);
+
+                String username = "hello123114";
+                if (ac.isUsernameExistsBlockchain(username)) {
+                    Log.d("go", "blockchain account exists");
+                } else {
+                    if (ac.isUsernameExistsLocal(username)) {
+                        Log.d("go", "local account exists");
+                    }else{
+                        try {
+                            String mnemonic = ac.createWalletLocal(username);
+                            Log.d("go", "Memonic : "+mnemonic);
+                        } catch (IOException ioException) {
+                            Log.d("go", "failed create local account");
+                            return;
+                        }
+                    }
+
+                    if (ac.accountRegisterBlockchain(username)) {
+                        while (!ac.isUsernameExistsBlockchain(username)) ;
+                        Log.d("go", "success");
+                    } else {
+                        Log.d("go", "failed register account");
+                        return;
+                    }
+                }
+
+                // --LOGIN--
+                ac.showKeys();
+
+                if (!bc.checkNodeStarted()) {
+                    return;
+                }
+
+                if (!bc.checkNodeSync()) {
+                    return;
+                }
+
+                username = "root";
+                String mnemonic = "retreat uphold table initial liquid glow debris carbon salon expire mystery entry blue skirt differ wing general only human scout fish pipe asthma base";
+                ac.deleteLocalAccountLocal(username);
+                if (ac.isUsernameExistsBlockchain(username)) {
+                    if (ac.isUsernameExistsLocal(username)) {
+                        Log.d("go", "local account exists");
+                    }
+
+                    //address는 mnemonic->pub_key->address로 생성되기에 mnemonic으로
+                    if (!ac.createWalletByMnemonicLocal(username, mnemonic)) {
+                        return;
+                    }
+                    String address;
+                    try {
+                        address = ac.getAddressByUsernameLocal(username);
+                    } catch (IOException e) {
+                        Log.d("go", "faild get add by username");
+                        return;
+                    }
+
+                    while (!ac.isAccountExistsBlockchain(address, username)) ;
+                    Log.d("go", "Success login");
+                } else {
+                    Log.d("go", "blockchain account not exists");
+                }
+            }
+        }
+        Thread thread = new Thread(new NewRunnable());
+        thread.start();
     }
 
     @Override

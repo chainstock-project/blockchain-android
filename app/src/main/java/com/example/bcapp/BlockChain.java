@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
 
 class AccountException extends Exception{
     AccountException(String msg){
@@ -31,7 +32,7 @@ class AccountException extends Exception{
 }
 
 
-public class BlockChain {
+class BlockChain {
     private Context ctx;
     private ApplicationInfo ai;
     private Intent intent;
@@ -67,9 +68,9 @@ public class BlockChain {
         try {
             latestHeight.start();
             latestHeight.join();
-            return Integer.parseInt(latestHeight.getLatestHeight());
+            return latestHeight.getLatestHeight();
         } catch (InterruptedException e) {
-            return Integer.parseInt(latestHeight.getLatestHeight());
+            return latestHeight.getLatestHeight();
         }
     }
 
@@ -78,9 +79,9 @@ public class BlockChain {
         downloadedHeight.start();
         try {
             downloadedHeight.join();
-            return Integer.parseInt(downloadedHeight.getDownloadedHeight());
+            return downloadedHeight.getDownloadedHeight();
         } catch (InterruptedException e) {
-            return Integer.parseInt(downloadedHeight.getDownloadedHeight());
+            return downloadedHeight.getDownloadedHeight();
         }
     }
 
@@ -124,7 +125,7 @@ public class BlockChain {
 
     private void editConfigToml() throws IOException {
         String configToml = homeDir + "/config/config.toml";
-        String nodeId = "ee0e96e8eafbe604b2ca73c93bd5ae3ab43970c1";
+        String nodeId = "28773b2cfeb9b9014c70056654fcac56a34b7f27";
         String peer = nodeId + "@" + this.serverIp + ":26656";
 
         //config.toml 읽기
@@ -179,32 +180,61 @@ public class BlockChain {
     }
 
     public boolean checkNodeStarted(){
+        CheckNodeStated checkNodeStated = new CheckNodeStated();
+        checkNodeStated.start();
         try {
-            (new Socket("127.0.0.1", 26657)).close();
-            return true;
-        }
-        catch(Exception e) {
-            return false;
+            checkNodeStated.join();
+            return checkNodeStated.getCheck();
+        } catch (InterruptedException e) {
+            return checkNodeStated.getCheck();
         }
     }
 
     public boolean checkNodeSync(){
-        if(this.getRemainHeight() > 5) {
+        int height = this.getRemainHeight();
+        if(height > 5) {
             return false;
         }
         return true;
     }
 
-    class LatestHeight extends Thread{
-        private String latestHeight;
+    class CheckNodeStated extends Thread{
+        private boolean check = false;
 
+        public void setCheckNodeStated() {
+            HttpURLConnection urlConn = null;
+            try {
+                URL url = new URL("http://127.0.0.1:26657/");
+                urlConn = (HttpURLConnection) url.openConnection();
+                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    this.check = true;
+                }
+            } catch (IOException e) {
+                this.check = false;
+            } finally {
+                if (urlConn != null)
+                    urlConn.disconnect();
+            }
+        }
+
+        public boolean getCheck() {
+            return this.check;
+        }
+
+        public void run(){
+            setCheckNodeStated();
+        }
+    }
+
+
+
+    class LatestHeight extends Thread{
+        private int latestHeight=2147483647;
         public void setLatestHeight() {
             HttpURLConnection urlConn = null;
             try {
-                URL url = new URL("http://127.0.0.1:26657/dump_consensus_state");
+                URL url = new URL("http://127.0.0.1:26657/dump_consensus_state?");
                 urlConn = (HttpURLConnection) url.openConnection();
-                urlConn.setRequestMethod("GET");
-                urlConn.setRequestProperty("Accept", "application/json");
 
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), "UTF-8"));
@@ -214,19 +244,17 @@ public class BlockChain {
                         reciveString.append(line);
                     }
                     JSONObject jsonObj = new JSONObject(reciveString.toString());
-                    this.latestHeight = (String) jsonObj.getJSONObject("result").getJSONArray("peers").getJSONObject(0).getJSONObject("peer_state").getJSONObject("round_state").get("height");
+                    this.latestHeight = Integer.parseInt((String) jsonObj.getJSONObject("result").getJSONArray("peers").getJSONObject(0).getJSONObject("peer_state").getJSONObject("round_state").get("height"));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             } catch (JSONException e) {
-                e.printStackTrace();
             } finally {
                 if (urlConn != null)
                     urlConn.disconnect();
             }
         }
 
-        public String getLatestHeight() {
+        public int getLatestHeight() {
             return latestHeight;
         }
 
@@ -236,7 +264,7 @@ public class BlockChain {
     }
 
     class DownloadedHeight extends Thread{
-        String downloadedHeight;
+        private int downloadedHeight=0;
 
         private void setDownloadedHeight() {
             HttpURLConnection urlConn = null;
@@ -255,7 +283,7 @@ public class BlockChain {
                         reciveString.append(line);
                     }
                     JSONObject jsonObj = new JSONObject(reciveString.toString());
-                    this.downloadedHeight = (String) jsonObj.getJSONObject("result").getJSONObject("response").get("last_block_height");
+                    this.downloadedHeight = Integer.parseInt((String) jsonObj.getJSONObject("result").getJSONObject("response").get("last_block_height"));
                 }
             } catch (Exception e) { // for openConnection().
                 e.printStackTrace();
@@ -265,7 +293,7 @@ public class BlockChain {
             }
         }
 
-        public String getDownloadedHeight() {
+        public int getDownloadedHeight() {
             return downloadedHeight;
         }
 
@@ -273,6 +301,7 @@ public class BlockChain {
             this.setDownloadedHeight();
         }
     }
+
 }
 
 class Account{
@@ -474,6 +503,35 @@ class Account{
 
         public void run(){
             this.accountRegister();
+        }
+    }
+}
+
+class Stock{
+    private String blockchainPath;
+    private String homeDir;
+
+    Stock(Context ctx, String serverIp) {
+        this.blockchainPath = ctx.getApplicationInfo().nativeLibraryDir + "/blockchaind.so";
+        this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
+    }
+
+
+    ArrayList<String> getStockDataByDate(String Date){
+        ArrayList<String> stockData = new ArrayList<String>(); // Create an ArrayList object
+        try {
+            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-stock-data", "--home", homeDir);
+            Process process = builder.start();
+
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while((line=stdOut.readLine()) != null){
+                stockData.add(line);
+            }
+
+            return stockData;
+        } catch (IOException e) {
+            return null;
         }
     }
 }
