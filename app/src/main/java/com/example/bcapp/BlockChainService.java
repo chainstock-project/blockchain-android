@@ -52,7 +52,7 @@ class Node extends Thread{
 
     private void startNode() throws IOException {
         Log.d("go", "----Start Node----");
-        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "start", "second-node", "--home", homeDir);
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "start", "--home", homeDir);
         this.process = builder.start();
 
         BufferedReader stdOutError = new BufferedReader(new InputStreamReader(process.getErrorStream()));

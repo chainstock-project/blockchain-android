@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,25 +50,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         // --LOADING--
-        String serverIp = "3.17.109.211";
+        String serverIp = "13.59.189.77";
         Context ctx = getApplicationContext();
         BlockChain bc = new BlockChain(ctx, serverIp);
+//        bc.deleteConfig();
         if(!bc.checkInitChainComplete()){
             if(!bc.createConfig()){
                 return;
             }
         }
+
         bc.startNode();
-        int a=1;
+
         class NewRunnable implements Runnable {
             Account ac = new Account(getApplicationContext(), serverIp);
+            Stock stock = new Stock(getApplicationContext(), serverIp);
             @Override
             public void run() {
                 // --CREATE_ACCOUNT--
                 while(bc.checkNodeStarted() == false);
-
                 while(bc.checkNodeSync() == false);
+
+                ArrayList<StockData> stockDataList = null;
+                try {
+                    stockDataList = stock.getStockDataList();
+                } catch (IOException e) {
+                    Log.d("go", "failed get stock data");
+                }
+                StockData stockData = null;
+                try {
+                    stockData = stock.getStockData("001520");
+                } catch (IOException e) {
+                    Log.d("go", "failed get stock data");
+                }
+
 
                 String username = "hello123114";
                 if (ac.isUsernameExistsBlockchain(username)) {
@@ -84,8 +102,14 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                     }
-
-                    if (ac.accountRegisterBlockchain(username)) {
+                    String address = null;
+                    try {
+                        address = ac.getAddressByUsernameLocal(username);
+                    } catch (IOException e) {
+                        Log.d("go", "failed get address");
+                        return;
+                    }
+                    if (ac.accountRegisterBlockchain(address, username)) {
                         while (!ac.isUsernameExistsBlockchain(username)) ;
                         Log.d("go", "success");
                     } else {
@@ -94,41 +118,57 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+
+
                 // --LOGIN--
+                while(bc.checkNodeStarted() == false);
+                while(bc.checkNodeSync() == false);
+
                 ac.showKeys();
-
-                if (!bc.checkNodeStarted()) {
-                    return;
-                }
-
-                if (!bc.checkNodeSync()) {
-                    return;
-                }
-
                 username = "root";
                 String mnemonic = "retreat uphold table initial liquid glow debris carbon salon expire mystery entry blue skirt differ wing general only human scout fish pipe asthma base";
                 ac.deleteLocalAccountLocal(username);
                 if (ac.isUsernameExistsBlockchain(username)) {
                     if (ac.isUsernameExistsLocal(username)) {
                         Log.d("go", "local account exists");
+                    }else{
+                        //address는 mnemonic->pub_key->address로 생성되기에 mnemonic으로
+                        if (!ac.createWalletByMnemonicLocal(username, mnemonic)) {
+                            return;
+                        }
+                        Log.d("go", "Success login");
                     }
-
-                    //address는 mnemonic->pub_key->address로 생성되기에 mnemonic으로
-                    if (!ac.createWalletByMnemonicLocal(username, mnemonic)) {
-                        return;
-                    }
-                    String address;
-                    try {
-                        address = ac.getAddressByUsernameLocal(username);
-                    } catch (IOException e) {
-                        Log.d("go", "faild get add by username");
-                        return;
-                    }
-
-                    while (!ac.isAccountExistsBlockchain(address, username)) ;
-                    Log.d("go", "Success login");
                 } else {
                     Log.d("go", "blockchain account not exists");
+                }
+
+                //--BUY_STOCK--
+                try {
+                    stock.createStockTransaction(username, "034730", 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try{
+                    String address = ac.getAddressByUsernameLocal(username);
+                    ArrayList<HoldingStock> holdingStockList = stock.getStockTransaction(address);
+                    System.out.println("asd");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //--SELL_STOCK--
+                try {
+                    stock.deleteStockTransaction(username, "034730", 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try{
+                    String address = ac.getAddressByUsernameLocal(username);
+                    ArrayList<HoldingStock> holdingStockList = stock.getStockTransaction(address);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

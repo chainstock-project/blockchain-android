@@ -24,8 +24,8 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 
-class AccountException extends Exception{
-    AccountException(String msg){
+class BlockchainException extends Exception{
+    BlockchainException(String msg){
         super(msg);
     }
 
@@ -63,6 +63,7 @@ class BlockChain {
             folder.delete(); //폴더 삭제
         }
     }
+
     public int getLatestHeight() {
         LatestHeight latestHeight = new LatestHeight();
         try {
@@ -125,7 +126,7 @@ class BlockChain {
 
     private void editConfigToml() throws IOException {
         String configToml = homeDir + "/config/config.toml";
-        String nodeId = "28773b2cfeb9b9014c70056654fcac56a34b7f27";
+        String nodeId = "313ded4be8c8bafddb072cecf5de8ebec2321dbc";
         String peer = nodeId + "@" + this.serverIp + ":26656";
 
         //config.toml 읽기
@@ -244,7 +245,11 @@ class BlockChain {
                         reciveString.append(line);
                     }
                     JSONObject jsonObj = new JSONObject(reciveString.toString());
-                    this.latestHeight = Integer.parseInt((String) jsonObj.getJSONObject("result").getJSONArray("peers").getJSONObject(0).getJSONObject("peer_state").getJSONObject("round_state").get("height"));
+                    int height = Integer.parseInt((String) jsonObj.getJSONObject("result").getJSONArray("peers").getJSONObject(0).getJSONObject("peer_state").getJSONObject("round_state").get("height"));
+
+                    if(height != 0){
+                        this.latestHeight = height;
+                    }
                 }
             } catch (IOException e) {
             } catch (JSONException e) {
@@ -255,7 +260,7 @@ class BlockChain {
         }
 
         public int getLatestHeight() {
-            return latestHeight;
+            return this.latestHeight;
         }
 
         public void run(){
@@ -286,7 +291,6 @@ class BlockChain {
                     this.downloadedHeight = Integer.parseInt((String) jsonObj.getJSONObject("result").getJSONObject("response").get("last_block_height"));
                 }
             } catch (Exception e) { // for openConnection().
-                e.printStackTrace();
             } finally {
                 if (urlConn != null)
                     urlConn.disconnect();
@@ -507,7 +511,33 @@ class Account{
     }
 }
 
-class Stock{
+class StockData{
+    String code;
+    String market_type;
+    int amount;
+    String date;
+
+    StockData(String code,String market_type, int amount, String date){
+        this.code = code;
+        this.market_type = market_type;
+        this.amount = amount;
+        this.date = date;
+    }
+}
+
+class HoldingStock{
+    String code;
+    int count;
+    int purchase_amount;
+
+    HoldingStock(String code, int count, int purchase_amount){
+        this.code = code;
+        this.count = count;
+        this.purchase_amount = purchase_amount;
+    }
+}
+
+class Stock {
     private String blockchainPath;
     private String homeDir;
 
@@ -516,22 +546,131 @@ class Stock{
         this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
     }
 
+    ArrayList<StockData> getStockDataList() throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-stock-data", "--limit", "5000", "--home", homeDir);
+        Process process = builder.start();
 
-    ArrayList<String> getStockDataByDate(String Date){
-        ArrayList<String> stockData = new ArrayList<String>(); // Create an ArrayList object
-        try {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-stock-data", "--home", homeDir);
-            Process process = builder.start();
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = stdOut.readLine();
+        if (line == null || line.equals("StockData: []")) {
+            throw new IOException("dosen't exists");
+        }
 
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while((line=stdOut.readLine()) != null){
-                stockData.add(line);
+        String[] line_split;
+        ArrayList<StockData> stockDataList = new ArrayList<StockData>(); // Create an ArrayList object
+        while ((line = stdOut.readLine()) != null) {
+            if(line.equals("pagination:")){
+                break;
             }
 
-            return stockData;
-        } catch (IOException e) {
-            return null;
+            line_split = line.split(" ");
+            int amount = (int) Double.parseDouble(line_split[line_split.length - 1]);
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            String get_code = line_split[line_split.length - 1].replace("\"", "");
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            String creator = line_split[line_split.length - 1];
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            String date = line_split[line_split.length - 1];
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            String market_type = line_split[line_split.length - 1];
+
+            StockData stockData = new StockData(get_code, market_type, amount, date);
+            stockDataList.add(stockData);
+        }
+
+        return stockDataList;
+    }
+
+
+    StockData getStockData(String code) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-stock-data", code, "--home", homeDir);
+        Process process = builder.start();
+
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line=stdOut.readLine();
+        if (line == null) {
+            throw new IOException("dosen't exists");
+        }
+
+        String[] line_split;
+        line = stdOut.readLine();
+        line_split = line.split(" ");
+        int amount = (int) Double.parseDouble(line_split[line_split.length - 1]);
+
+        line = stdOut.readLine();
+        line_split = line.split(" ");
+        String get_code = line_split[line_split.length - 1].replace("\"", "");
+
+        line = stdOut.readLine();
+        line_split = line.split(" ");
+        String creator = line_split[line_split.length - 1];
+
+        line = stdOut.readLine();
+        line_split = line.split(" ");
+        String date = line_split[line_split.length - 1];
+
+        line = stdOut.readLine();
+        line_split = line.split(" ");
+        String market_type = line_split[line_split.length - 1];
+
+        StockData stockData = new StockData(get_code, market_type, amount, date);
+        return stockData;
+    }
+
+
+    void createStockTransaction(String username, String code, int count) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
+        Process process = builder.start();
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = stdOut.readLine();
+        if (line == null) {
+            throw new IOException("dosen't exists");
         }
     }
+
+    void deleteStockTransaction(String username, String code, int count)throws IOException{
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "delete-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "-y");
+        Process process = builder.start();
+    }
+
+    ArrayList<HoldingStock> getStockTransaction(String address) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-stock-transaction", address, "--home", homeDir);
+        Process process = builder.start();
+
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = stdOut.readLine();
+        if (line == null) {
+            throw new IOException("dosen't exists");
+        }else{
+            line = stdOut.readLine();
+            line = stdOut.readLine();
+        }
+        String[] line_split;
+        ArrayList<HoldingStock> holdingStockList = new ArrayList<HoldingStock>();
+        while ((line = stdOut.readLine()) != null) {
+            line_split = line.split(" ");
+            String code = line_split[line_split.length - 1].replace("\"", "");
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            int count = (int) Double.parseDouble(line_split[line_split.length - 1]);
+
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            int puerchase_amount = (int) Double.parseDouble(line_split[line_split.length - 1]);
+
+            HoldingStock holdingStock = new HoldingStock(code, count, puerchase_amount);
+            holdingStockList.add(holdingStock);
+        }
+        return holdingStockList;
+    }
+
 }

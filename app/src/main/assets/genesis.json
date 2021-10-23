@@ -1,5 +1,5 @@
 {
-  "genesis_time":"2021-10-17T10:10:32.201343469Z",
+  "genesis_time":"2021-10-22T09:07:10.120706044Z",
   "chain_id":"stock-chain",
   "initial_height":"1",
   "consensus_params":{
@@ -154,7 +154,7 @@
                 "validator_address":"cosmosvaloper1s3pzgpduvnq4r59mjx0vmdzfttqkhywwh2ajn9",
                 "pubkey":{
                   "@type":"/cosmos.crypto.ed25519.PubKey",
-                  "key":"HnUrAT7NjIxW5XV3aQhTkknoQ+CptzixNzTuW4uHaxA="
+                  "key":"5ojOvlT/d8b0dvINM+63HjhYii1r7j2as204/vD5FJQ="
                 },
                 "value":{
                   "denom":"stake",
@@ -162,7 +162,7 @@
                 }
               }
             ],
-            "memo":"28773b2cfeb9b9014c70056654fcac56a34b7f27@172.17.0.2:26656",
+            "memo":"313ded4be8c8bafddb072cecf5de8ebec2321dbc@172.17.0.2:26656",
             "timeout_height":"0",
             "extension_options":[
 
@@ -196,7 +196,7 @@
             }
           },
           "signatures":[
-            "YOJPgd7R4quDb9gsGMxCFh23fuHm7tDMRioH69rdGAtN0aaOj+GJTiTeA1qOpZgc7ygb4SPWs9pztm0kwEJiWQ=="
+            "j5kAwinJGqWOePCXcacZS1P4JyZz9YjTAx3v0eSxDqgrKxFH+S9Wi72+wxL12vCkhAffzPX5LNUu240NKHOc5w=="
           ]
         }
       ]
@@ -354,6 +354,7 @@
 
     },
     "vesting":{
+
     }
   }
 }
