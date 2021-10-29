@@ -21,6 +21,7 @@ public class StockTransaction {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        (new BufferedReader(new InputStreamReader(process.getInputStream()))).readLine();
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
@@ -29,7 +30,8 @@ public class StockTransaction {
 
     public void deleteStockTransaction(String username, String code, int count)throws IOException{
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "delete-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "-y");
-        Process process = builder.start();
+        Process process = builder.start();        (new BufferedReader(new InputStreamReader(process.getInputStream()))).readLine();
+
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
@@ -117,5 +119,45 @@ public class StockTransaction {
 
         StockBankInform stockBankInform = new StockBankInform(currentTotalAmount, balances, currentStockTotalAmount, earning_rate);
         return stockBankInform;
+    }
+
+    public ArrayList<StockTransactionRecordInform> getStockTransactionRecord(String address) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-stock-transaction-record", address, "--home", homeDir);
+        Process process = builder.start();
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line = stdOut.readLine();
+        if (line == null) {
+            throw new IOException("dosen't exists");
+        }else {
+            stdOut.readLine(); stdOut.readLine();
+
+            ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList = new ArrayList<StockTransactionRecordInform>();
+            while ((line = stdOut.readLine()) != null) {
+                String[] line_split = line.split(" ");
+                long amount = Long.parseLong(line_split[line_split.length - 1]);
+
+                line = stdOut.readLine();
+                line_split = line.split(" ");
+                String code = line_split[line_split.length - 1].replace("\"", "");
+
+                line = stdOut.readLine();
+                line_split = line.split(" ");
+                int count = (int) Double.parseDouble(line_split[line_split.length - 1]);
+
+                line = stdOut.readLine();
+                line_split = line.split(" ");
+                String date = line_split[line_split.length - 1].replace("\"", "");
+
+                line = stdOut.readLine();
+                line_split = line.split(" ");
+                String recordType = line_split[line_split.length - 1].replace("\"", "");
+
+                StockTransactionRecordInform stockTransactionRecordInform = new StockTransactionRecordInform(code, amount, count, date, recordType);
+                stockTransactionRecordInformList.add(stockTransactionRecordInform);
+            }
+
+            return stockTransactionRecordInformList;
+        }
     }
 }

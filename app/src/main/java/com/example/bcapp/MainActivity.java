@@ -10,6 +10,7 @@ import com.example.stockchain.StockData;
 import com.example.stockchain.StockDataInform;
 import com.example.stockchain.StockTransaction;
 import com.example.stockchain.StockTransactionInform;
+import com.example.stockchain.StockTransactionRecordInform;
 import com.example.stockchain.WalletInform;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -153,19 +154,21 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("go", "failed get stock data");
                 }
 
-
                 //--BUY_STOCK_TRANSACTION--
                 StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
                 try {
-                    stockTransaction.createStockTransaction(username, "131400", 5);
+                    stockTransaction.createStockTransaction(username, "131400", 10);
                     Log.d("go", "success buy stock");
                 } catch (IOException e) {
+                    e.printStackTrace();
                     Log.d("go", "failed buy stock");
                 }
+
                 try {
-                    stockTransaction.createStockTransaction(username, "340120", 5);
+                    stockTransaction.createStockTransaction(username, "340120", 11);
                     Log.d("go", "success buy stock");
                 } catch (IOException e) {
+                    e.printStackTrace();
                     Log.d("go", "failed buy stock");
                 }
 
@@ -180,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //--SELL_STOCK_TRANSACTION--
                 try {
-                    stockTransaction.deleteStockTransaction(username, "131400", 5);
+                    stockTransaction.deleteStockTransaction(username, "131400", 9);
                     Log.d("go", "success sell stock transaction");
                 } catch (IOException e) {
                     Log.d("go", "failed sell stock transaction");
@@ -199,13 +202,19 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     String address = ac.getAddressByUsernameLocal(username);
                     StockBankInform stockBankInform = stockTransaction.getStockBankeInform(address);
-                    Log.d("go", "success show stock inform");
+                    Log.d("go", "success show stock bank inform");
                 } catch (IOException e) {
-                    Log.d("go", "failed show stock inform");
+                    Log.d("go", "failed show stock bank inform");
                 }
 
                 //--SHOW_STOCK_RECORD
-
+                try {
+                    String address = ac.getAddressByUsernameLocal(username);
+                    ArrayList<StockTransactionRecordInform> stockTransactionRecordInform = stockTransaction.getStockTransactionRecord(address);
+                    Log.d("go", "success show stock transaction record");
+                } catch (IOException e) {
+                    Log.d("go", "failed show stock transaction record");
+                }
             }
         }
         Thread thread = new Thread(new NewRunnable());
