@@ -3,6 +3,14 @@ package com.example.bcapp;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.example.stockchain.Account;
+import com.example.stockchain.BlockChain;
+import com.example.stockchain.StockBankInform;
+import com.example.stockchain.StockData;
+import com.example.stockchain.StockDataInform;
+import com.example.stockchain.StockTransaction;
+import com.example.stockchain.StockTransactionInform;
+import com.example.stockchain.WalletInform;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Context ctx = getApplicationContext();
         BlockChain bc = new BlockChain(ctx, serverIp);
 //        bc.deleteConfig();
-        if(!bc.checkInitChainComplete()){
+        if(!bc.checkCreatedConfig()){
             if(!bc.createConfig()){
                 return;
             }
@@ -65,29 +73,15 @@ public class MainActivity extends AppCompatActivity {
         bc.startNode();
 
         class NewRunnable implements Runnable {
-            Account ac = new Account(getApplicationContext(), serverIp);
-            Stock stock = new Stock(getApplicationContext(), serverIp);
             @Override
             public void run() {
-                // --CREATE_ACCOUNT--
+                //check node connected
                 while(bc.checkNodeStarted() == false);
                 while(bc.checkNodeSync() == false);
 
-                ArrayList<StockData> stockDataList = null;
-                try {
-                    stockDataList = stock.getStockDataList();
-                } catch (IOException e) {
-                    Log.d("go", "failed get stock data");
-                }
-                StockData stockData = null;
-                try {
-                    stockData = stock.getStockData("001520");
-                } catch (IOException e) {
-                    Log.d("go", "failed get stock data");
-                }
-
-
-                String username = "hello123114";
+                // --CREATE_ACCOUNT--
+                Account ac = new Account(getApplicationContext(), serverIp);
+                String username = "helloworld";
                 if (ac.isUsernameExistsBlockchain(username)) {
                     Log.d("go", "blockchain account exists");
                 } else {
@@ -97,79 +91,121 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             String mnemonic = ac.createWalletLocal(username);
                             Log.d("go", "Memonic : "+mnemonic);
+
+                            try {
+                                String address = ac.getAddressByUsernameLocal(username);
+
+                                if (ac.walletRegisterBlockchain(username, address)) {
+                                    while (!ac.isUsernameExistsBlockchain(username)) ;
+                                    Log.d("go", "success");
+                                } else {
+                                    Log.d("go", "failed register account");
+                                }
+                            } catch (IOException e) {
+                                Log.d("go", "failed get address");
+                            }
                         } catch (IOException ioException) {
                             Log.d("go", "failed create local account");
-                            return;
                         }
-                    }
-                    String address = null;
-                    try {
-                        address = ac.getAddressByUsernameLocal(username);
-                    } catch (IOException e) {
-                        Log.d("go", "failed get address");
-                        return;
-                    }
-                    if (ac.accountRegisterBlockchain(address, username)) {
-                        while (!ac.isUsernameExistsBlockchain(username)) ;
-                        Log.d("go", "success");
-                    } else {
-                        Log.d("go", "failed register account");
-                        return;
+
                     }
                 }
 
-
-
                 // --LOGIN--
-                while(bc.checkNodeStarted() == false);
-                while(bc.checkNodeSync() == false);
-
-                ac.showKeys();
                 username = "root";
                 String mnemonic = "retreat uphold table initial liquid glow debris carbon salon expire mystery entry blue skirt differ wing general only human scout fish pipe asthma base";
-                ac.deleteLocalAccountLocal(username);
                 if (ac.isUsernameExistsBlockchain(username)) {
                     if (ac.isUsernameExistsLocal(username)) {
                         Log.d("go", "local account exists");
                     }else{
                         //address는 mnemonic->pub_key->address로 생성되기에 mnemonic으로
-                        if (!ac.createWalletByMnemonicLocal(username, mnemonic)) {
-                            return;
+                        if (ac.createWalletByMnemonicLocal(username, mnemonic)) {
+                            Log.d("go", "Success login");
+                        }else {
+                            Log.d("go", "Failed login");
                         }
-                        Log.d("go", "Success login");
                     }
                 } else {
                     Log.d("go", "blockchain account not exists");
                 }
 
-                //--BUY_STOCK--
+                //-- SHOW WALET --
                 try {
-                    stock.createStockTransaction(username, "034730", 1);
+                    ArrayList<WalletInform> walletList = ac.getWalletList();
+                    Log.d("go", "success show wallet");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("go", "failed show wallet");
                 }
 
-                try{
-                    String address = ac.getAddressByUsernameLocal(username);
-                    ArrayList<HoldingStock> holdingStockList = stock.getStockTransaction(address);
-                    System.out.println("asd");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                //--SELL_STOCK--
+                //--STOCK_DATA--
+                StockData stockData = new StockData(getApplicationContext());
                 try {
-                    stock.deleteStockTransaction(username, "034730", 1);
+                    ArrayList<StockDataInform> stockDataInformList = stockData.getStockDataList();
+                    Log.d("go", "success get stock data");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("go", "failed get stock data");
                 }
 
-                try{
-                    String address = ac.getAddressByUsernameLocal(username);
-                    ArrayList<HoldingStock> holdingStockList = stock.getStockTransaction(address);
+                try {
+                    StockDataInform stockDataInform = stockData.getStockData("001520");
+                    Log.d("go", "suceess get stock data");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("go", "failed get stock data");
                 }
+
+
+                //--BUY_STOCK_TRANSACTION--
+                StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
+                try {
+                    stockTransaction.createStockTransaction(username, "131400", 5);
+                    Log.d("go", "success buy stock");
+                } catch (IOException e) {
+                    Log.d("go", "failed buy stock");
+                }
+                try {
+                    stockTransaction.createStockTransaction(username, "340120", 5);
+                    Log.d("go", "success buy stock");
+                } catch (IOException e) {
+                    Log.d("go", "failed buy stock");
+                }
+
+                //--SHOW_STOCK_TRANSACTION--
+                try {
+                    String address = ac.getAddressByUsernameLocal(username);
+                    ArrayList<StockTransactionInform> stockTransactionInformList = stockTransaction.getStockTransactionInform(address);
+                    Log.d("go", "success show stock transaction");
+                } catch (IOException e) {
+                    Log.d("go", "failed show stock transaction");
+                }
+
+                //--SELL_STOCK_TRANSACTION--
+                try {
+                    stockTransaction.deleteStockTransaction(username, "131400", 5);
+                    Log.d("go", "success sell stock transaction");
+                } catch (IOException e) {
+                    Log.d("go", "failed sell stock transaction");
+                }
+
+                //--SHOW_STOCK_TRANSACTION--
+                try {
+                    String address = ac.getAddressByUsernameLocal(username);
+                    ArrayList<StockTransactionInform> stockTransactionInformList = stockTransaction.getStockTransactionInform(address);
+                    Log.d("go", "success show stock transaction");
+                } catch (IOException e) {
+                    Log.d("go", "failed show stock transaction");
+                }
+
+                //--SHOW_STOCK_BANK_INFORM--
+                try {
+                    String address = ac.getAddressByUsernameLocal(username);
+                    StockBankInform stockBankInform = stockTransaction.getStockBankeInform(address);
+                    Log.d("go", "success show stock inform");
+                } catch (IOException e) {
+                    Log.d("go", "failed show stock inform");
+                }
+
+                //--SHOW_STOCK_RECORD
+
             }
         }
         Thread thread = new Thread(new NewRunnable());
