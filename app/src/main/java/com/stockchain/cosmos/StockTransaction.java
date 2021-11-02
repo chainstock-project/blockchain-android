@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StockTransaction {
     private Context ctx;
@@ -37,7 +39,7 @@ public class StockTransaction {
         }
     }
 
-    private ArrayList<StockTransactionInform> getStockTransaction(String address) throws IOException {
+    private ArrayList<StockTransactionInform> getStockTransactionList(String address) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-stock-transaction", address, "--home", homeDir);
         Process process = builder.start();
 
@@ -69,9 +71,9 @@ public class StockTransaction {
         }
     }
 
-    public ArrayList<StockTransactionInform> getStockTransactionInform(String address) throws IOException {
+    public ArrayList<StockTransactionInform> getStockTransactionInformList(String address) throws IOException {
         StockData stockData = new StockData(this.ctx);
-        ArrayList<StockTransactionInform> StockTransactionInformList = this.getStockTransaction(address);
+        ArrayList<StockTransactionInform> StockTransactionInformList = this.getStockTransactionList(address);
 
         for(int i=0;i<StockTransactionInformList.size();i++){
             StockTransactionInform stockTransactionInform = StockTransactionInformList.get(i);
@@ -84,8 +86,7 @@ public class StockTransaction {
         return StockTransactionInformList;
     }
 
-    private int getCurrentStockTransactionTotalAmount(String address) throws IOException{
-        ArrayList<StockTransactionInform> stockTransactionInformList = this.getStockTransactionInform(address);
+    private int getCurrentStockTransactionTotalAmount(ArrayList<StockTransactionInform> stockTransactionInformList) throws IOException{
         int amount = 0;
         for(StockTransactionInform h : stockTransactionInformList){
             amount += h.currentAmount;
@@ -109,9 +110,9 @@ public class StockTransaction {
         return Long.parseLong(amount);
     }
 
-    public StockBankInform getStockBankeInform(String address) throws IOException {
+    public StockBankInform getStockBankInform(ArrayList<StockTransactionInform> stockTransactionInformList, String address) throws IOException {
         long balances = this.getBalance(address);
-        long currentStockTotalAmount = this.getCurrentStockTransactionTotalAmount(address);
+        long currentStockTotalAmount = this.getCurrentStockTransactionTotalAmount(stockTransactionInformList);
         long currentTotalAmount = balances + currentStockTotalAmount;
         double earning_rate = (((double) currentTotalAmount / 1000000) - 1) * 100;
 
@@ -158,4 +159,11 @@ public class StockTransaction {
             return stockTransactionRecordInformList;
         }
     }
+
+    public ArrayList<StockTransactionInform> getStockTransactionTop3(ArrayList<StockTransactionInform> stockTransactionInformList) throws IOException {
+        Collections.sort(stockTransactionInformList);
+        return stockTransactionInformList;
+    }
+
+
 }

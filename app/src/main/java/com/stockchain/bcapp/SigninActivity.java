@@ -51,22 +51,18 @@ public class SigninActivity extends AppCompatActivity {
                     }
                     try {
                         String mnemonic = ac.createWalletLocal(username);
-                        try {
-                            String address = ac.getAddressByUsernameLocal(username);
-                            if (ac.walletRegisterBlockchain(username, address)) {
-                                while (!ac.isUsernameExistsBlockchain(username));
-                                PreferenceManager pm = new PreferenceManager();
-                                pm.setString(getApplicationContext(), "username", username);
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Tools.showDialog(SigninActivity.this, "회원가입", "회원가입 실패");
-                           }
-
-                        } catch (IOException e) {
-                            Tools.showDialog(SigninActivity.this, "회원가입", "계정주소 얻기를 실패했습니다.");
-                        }
+                        String address = ac.getAddressByUsernameLocal(username);
+                        if (ac.walletRegisterBlockchain(username, address)) {
+                            while (!ac.isUsernameExistsBlockchain(username));
+                            PreferenceManager pm = new PreferenceManager();
+                            pm.setString(getApplicationContext(), "username", username);
+                            pm.setString(getApplicationContext(), "address", address);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Tools.showDialog(SigninActivity.this, "회원가입", "회원가입 실패");
+                       }
                     } catch (IOException ioException) {
                         Tools.showDialog(SigninActivity.this, "회원가입", "지갑생성에 실패했습니다.");
                     }

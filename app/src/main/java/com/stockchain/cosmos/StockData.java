@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class StockData {
     private final String blockchainPath;
@@ -102,4 +103,24 @@ public class StockData {
         return stockDataInform;
     }
 
+    public StockDataDetailInform getStockDetail(String code){
+        StockDataDetailInform stockDataDetailInform = new StockDataDetailInform();
+
+
+        return stockDataDetailInform;
+    }
+
+    public ArrayList<StockDataInform> searchStock(ArrayList<StockDataInform> stockDataInformList, String name){
+        ArrayList<StockDataInform> searchedStockDataInformList = new ArrayList<>();
+
+        Iterator<StockDataInform> iterator = stockDataInformList.iterator();
+        while(iterator.hasNext()){
+            StockDataInform stockDataInform = iterator.next();
+            if(stockDataInform.name.contains(name)){
+                searchedStockDataInformList.add(stockDataInform);
+            }
+        }
+
+        return searchedStockDataInformList;
+    }
 }

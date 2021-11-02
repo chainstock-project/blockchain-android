@@ -2,4 +2,8 @@
     <string name="app_name">BCapp</string>
     <string name="server_ip">3.36.51.53</string>
     <string name="username">username_key</string>
+
+    <string name="asset_text_view">자산</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

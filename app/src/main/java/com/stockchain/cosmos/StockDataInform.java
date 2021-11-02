@@ -15,3 +15,4 @@ public class StockDataInform {
         this.date = date;
     }
 }
+

@@ -1,6 +1,6 @@
 package com.stockchain.cosmos;
 
-public class StockTransactionInform {
+public class StockTransactionInform implements Comparable<StockTransactionInform> {
     String code;
     int count;
     long purchaseAmount;
@@ -13,5 +13,11 @@ public class StockTransactionInform {
         this.code = code;
         this.count = count;
         this.purchaseAmount = purchase_amount;
+    }
+
+    @Override
+    public int compareTo(StockTransactionInform stockTransactionInform) {
+        Long a = new Long(this.currentAmount);
+        return a.compareTo(stockTransactionInform.currentAmount);
     }
 }
