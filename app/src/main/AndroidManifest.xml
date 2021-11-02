@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
     package="com.stockchain.bcapp">
     <uses-permission android:name="android.permission.INTERNET"/>
-=======
-    package="com.stockchain.bcapp" >
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
->>>>>>> 6be32e5... blockchain
     <application
         android:allowBackup="true"
         android:extractNativeLibs="true"
@@ -19,40 +12,32 @@
         android:theme="@style/Theme.BCapp"
         android:usesCleartextTraffic="true" >
         <activity
-<<<<<<< HEAD
-            android:name="com.stockchain.bcapp.MainActivity"
+            android:name=".LoadingActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.BCapp.NoActionBar">
-=======
-            android:name=".MainActivity"
+        </activity>
+        <activity
+            android:name=".SigninActivity"
+            android:theme="@style/Theme.BCapp.NoActionBar"
             android:exported="true" />
         <activity
-            android:name=".LoadingActivity"
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.BCapp.NoActionBar"
             android:exported="true" >
->>>>>>> 6be32e5... blockchain
+        </activity>
+
+        <activity
+            android:name="com.stockchain.bcapp.MainActivity"
+            android:exported="true"
+            android:label="Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
-=======
-        <activity
-            android:name=".SigninActivity"
-            android:exported="true" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" >
-        </activity>
-        <activity
-            android:name=".test"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.BCapp.NoActionBar" />
 
->>>>>>> 6be32e5... blockchain
+
         <service android:name="com.stockchain.cosmos.BlockChainService" />
     </application>
 
