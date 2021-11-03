@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stockchain.bcapp">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:extractNativeLibs="true"
@@ -10,24 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BCapp"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true">
+
         <activity
             android:name=".LoadingActivity"
             android:exported="true"
-            android:theme="@style/Theme.BCapp.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.BCapp.NoActionBar"></activity>
         <activity
             android:name=".SigninActivity"
-            android:theme="@style/Theme.BCapp.NoActionBar"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.BCapp.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/Theme.BCapp.NoActionBar"
-            android:exported="true" >
-        </activity>
-
+            android:exported="true"
+            android:theme="@style/Theme.BCapp.NoActionBar"></activity>
         <activity
-            android:name="com.stockchain.bcapp.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="Main">
             <intent-filter>
@@ -36,7 +36,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <service android:name="com.stockchain.cosmos.BlockChainService" />
     </application>

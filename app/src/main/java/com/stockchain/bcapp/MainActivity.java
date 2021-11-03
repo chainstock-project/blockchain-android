@@ -5,12 +5,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -19,10 +22,24 @@ public class MainActivity extends AppCompatActivity {
     MainMockFragment mainMockFragment;
     MainFeedFragment mainFeedFragment;
     MainRankFragment mainRankFragment;
-    MainSearchFragment mainSearchFragment;
     MainSettingFragment mainSettingFragment;
+    MainSearchFragment mainSearchFragment;
 
+    SearchView searchView;
     BottomNavigationView bottomNavigationView;
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public SearchView getSearchView() {
+        return searchView;
+    }
+
+    public void setSearchView(SearchView searchView) {
+        this.searchView = searchView;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,12 +84,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        SearchView sv = (SearchView)menu.findItem(R.id.menu_search).getActionView();
-        sv.setQueryHint("주식이름입력");
-        sv.setMaxWidth(Integer.MAX_VALUE);
-        sv.setOnSearchClickListener(new onClickSearchView());
-        sv.setOnQueryTextListener(new onQueryTextSearchView());
+        searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
+        searchView.setQueryHint("주식이름입력");
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnSearchClickListener(new onClickSearchView());
+        searchView.setOnQueryTextListener(new onQueryTextSearchView());
 
         return true;
     }
@@ -80,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
     class onClickSearchView implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
             bottomNavigationView.setVisibility(View.INVISIBLE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSearchFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSearchFragment).addToBackStack(null).commit();
         }
     }
 
@@ -100,9 +118,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int curId = item.getItemId();
         switch (curId){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+//            getFragmentManager().popBackStack();
+//        }
+//        else {
+//            super.onBackPressed();
+//        }
+//    }
 }
