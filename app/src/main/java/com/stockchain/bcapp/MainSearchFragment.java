@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stockchain.cosmos.StockDataInform;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
@@ -58,7 +60,10 @@ class onQueryTextSearchView implements SearchView.OnQueryTextListener{
     public boolean onQueryTextChange(String newText) {
         try {
             SearchAdapter searchAdapter = mainActivity.searchAdapter;
-            searchAdapter.addItem(new StockDataInform("0001", newText, "kospi"));
+            ArrayList<StockDataInform> stockDataInforms = new ArrayList<>();
+            stockDataInforms.add(new StockDataInform("0001", newText, "kospi"));
+            searchAdapter.setItems(stockDataInforms);
+
             mainActivity.recyclerView.setAdapter(searchAdapter);
             return true;
         }catch (NullPointerException e){

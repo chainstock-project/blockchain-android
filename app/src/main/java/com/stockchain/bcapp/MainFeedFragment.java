@@ -16,7 +16,7 @@ public class MainFeedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_main_home, container, false);
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_main_feed, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
         SearchView searchView = mainActivity.getSearchView();
         if(searchView != null){
