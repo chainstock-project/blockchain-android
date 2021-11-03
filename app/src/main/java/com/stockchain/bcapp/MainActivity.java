@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
     BottomNavigationView bottomNavigationView;
+    RecyclerView recyclerView;
+    SearchAdapter searchAdapter;
 
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
@@ -88,29 +92,14 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("주식이름입력");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnSearchClickListener(new onClickSearchView());
-        searchView.setOnQueryTextListener(new onQueryTextSearchView());
-
+        searchView.setOnQueryTextListener(new onQueryTextSearchView(this));
         return true;
     }
 
     class onClickSearchView implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            bottomNavigationView.setVisibility(View.INVISIBLE);
             getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSearchFragment).addToBackStack(null).commit();
-        }
-    }
-
-    class onQueryTextSearchView implements SearchView.OnQueryTextListener{
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            return true;
-        }
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            return true;
         }
     }
 
@@ -127,13 +116,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (getFragmentManager().getBackStackEntryCount() > 0 ){
-//            getFragmentManager().popBackStack();
-//        }
-//        else {
-//            super.onBackPressed();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
 }
