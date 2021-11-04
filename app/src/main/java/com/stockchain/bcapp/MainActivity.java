@@ -19,6 +19,7 @@ interface OnBackPressedListener{
 
 public class MainActivity extends AppCompatActivity {
     Menu menu;
+    StockDataInform inqueryStockDataInform;
     MainHomeFragment mainHomeFragment;
     MainFeedFragment mainFeedFragment;
     MainRankFragment mainRankFragment;
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mockRecordRecyclerView;
     MockStockTransactionRecordAdapter mockRecordAdapter;
 
-    StockDataInform inqueryStockDataInform;
-
+    RecyclerView feedRecyclerView;
+    FeedAdapter feedAdapter;
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
     }
