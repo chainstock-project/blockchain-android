@@ -36,6 +36,10 @@ public class MockStockTransactionStatusFragment extends Fragment {
         stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
         stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
         stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
+        stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
+        stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
+        stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
+        stockTransactionInformList.add(new StockTransactionInform("00010",10,1000000,"hihi", "kospi",1000,10.5));
 
         mainActivity.mockStatusAdapter.setItems(stockTransactionInformList);
         mainActivity.mockRecyclerView.setAdapter(mainActivity.mockStatusAdapter);

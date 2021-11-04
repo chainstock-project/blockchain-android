@@ -142,6 +142,10 @@ public class StockTransaction {
 
                 line = stdOut.readLine();
                 line_split = line.split(" ");
+                String name = line_split[line_split.length - 1].replace("\"", "");
+
+                line = stdOut.readLine();
+                line_split = line.split(" ");
                 int count = (int) Double.parseDouble(line_split[line_split.length - 1]);
 
                 line = stdOut.readLine();
@@ -152,7 +156,7 @@ public class StockTransaction {
                 line_split = line.split(" ");
                 String recordType = line_split[line_split.length - 1].replace("\"", "");
 
-                StockTransactionRecordInform stockTransactionRecordInform = new StockTransactionRecordInform(code, amount, count, date, recordType);
+                StockTransactionRecordInform stockTransactionRecordInform = new StockTransactionRecordInform(code, name, amount, count, date, recordType);
                 stockTransactionRecordInformList.add(stockTransactionRecordInform);
             }
 

@@ -27,12 +27,17 @@ public class MainActivity extends AppCompatActivity {
     MainStockInqueryFragment mainStockInqueryFragment;
 //    MainStockTransactionFragment mainStockTransactionFragment;
 
-    BottomNavigationView bottomNavigationView;
     SearchView searchView;
+    BottomNavigationView bottomNavigationView;
+
     RecyclerView searchRecyclerView;
     SearchAdapter searchAdapter;
+
     RecyclerView mockRecyclerView;
     MockStockTransactionStatusAdapter mockStatusAdapter;
+
+    RecyclerView mockRecordRecyclerView;
+    MockStockTransactionRecordAdapter mockRecordAdapter;
 
     StockDataInform inqueryStockDataInform;
 
