@@ -22,8 +22,8 @@ public class MainMockFragment extends Fragment {
         ViewPager pager= rootView.findViewById(R.id.mockContainer);
 
         MockPageAdapter mockPageAdapter = new MockPageAdapter(getChildFragmentManager());
-        mockPageAdapter.addItem(new MockTransactionStatusFragment());
-        mockPageAdapter.addItem(new MockTransactionRecordFragment());
+        mockPageAdapter.addItem(new MockStockTransactionStatusFragment());
+        mockPageAdapter.addItem(new MockStockTransactionRecordFragment());
         pager.setAdapter(mockPageAdapter);
 
         tabLayout.setupWithViewPager(pager); //텝레이아웃과 뷰페이저를 연결

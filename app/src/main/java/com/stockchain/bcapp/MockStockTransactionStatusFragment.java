@@ -17,18 +17,18 @@ import com.stockchain.cosmos.StockTransactionInform;
 
 import java.util.ArrayList;
 
-public class MockTransactionStatusFragment extends Fragment {
+public class MockStockTransactionStatusFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_mock_transaction_status, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_mock_stock_transaction_status, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
 
         mainActivity.mockRecyclerView = rootView.findViewById(R.id.mockRecycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mainActivity.mockRecyclerView.setLayoutManager(layoutManager);
 
-        mainActivity.mockStatusAdapter = new MockStatusAdapter();
+        mainActivity.mockStatusAdapter = new MockStockTransactionStatusAdapter();
         mainActivity.mockStatusAdapter.setOnItemClickListener(new MockItemClickListener(mainActivity));
 
         ArrayList<StockTransactionInform> stockTransactionInformList = new ArrayList<>();
@@ -45,7 +45,7 @@ public class MockTransactionStatusFragment extends Fragment {
 }
 
 
-class MockStatusAdapter extends RecyclerView.Adapter<MockStatusAdapter.MockViewHolder>{
+class MockStockTransactionStatusAdapter extends RecyclerView.Adapter<MockStockTransactionStatusAdapter.MockViewHolder>{
     ArrayList<StockTransactionInform> items = new ArrayList<>();
     private OnItemClickListener mListener = null ;
 

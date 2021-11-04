@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView searchRecyclerView;
     SearchAdapter searchAdapter;
     RecyclerView mockRecyclerView;
-    MockStatusAdapter mockStatusAdapter;
+    MockStockTransactionStatusAdapter mockStatusAdapter;
 
     StockDataInform inqueryStockDataInform;
 
