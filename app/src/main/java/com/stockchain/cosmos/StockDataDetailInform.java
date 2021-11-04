@@ -3,15 +3,16 @@ package com.stockchain.cosmos;
 import java.util.ArrayList;
 
 public class StockDataDetailInform {
+    String date;
+
     String code;
     String name;
     String market_type;
-    String date;
-
-    int previousCloseAmount;
-    int todayCloseAmount;
     int dayOverDayAmount;
     Double dayOverDayRate;
+
+
+    int previousCloseAmount;
     int numberOfStock;
 
     long marketCap;

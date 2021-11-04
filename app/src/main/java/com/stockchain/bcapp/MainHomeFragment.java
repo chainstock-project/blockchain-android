@@ -5,13 +5,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SearchView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -76,7 +74,7 @@ public class MainHomeFragment extends Fragment {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1); // add the data sets
         LineData data = new LineData(dataSets);
-        kospiChart= (LineChart)rootview.findViewById(R.id.kospiChart);
+        kospiChart= (LineChart)rootview.findViewById(R.id.stockChart);
         kospiChart.setData(data);
 
         values = new ArrayList<>();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,10 @@ public class MainSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_search, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
+//        if(mainActivity.searchView.isIconified()){
+//            mainActivity.getSupportFragmentManager().popBackStackImmediate();
+//            return rootView;
+//        }
         ActionBar actionBar = mainActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
@@ -39,7 +44,7 @@ public class MainSearchFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mainActivity.recyclerView.setLayoutManager(layoutManager);
         mainActivity.searchAdapter = new SearchAdapter();
-        mainActivity.searchAdapter.setOnItemClickListener(new SearchVeiwItemClick());
+        mainActivity.searchAdapter.setOnItemClickListener(new SearchVeiwItemClick(mainActivity));
 
         return rootView;
     }
@@ -73,10 +78,16 @@ class onQueryTextSearchView implements SearchView.OnQueryTextListener{
 }
 
 class SearchVeiwItemClick implements SearchAdapter.OnItemClickListener {
+    MainActivity mainActivity;
+
+    public SearchVeiwItemClick(MainActivity mainActivity) {
+        this.mainActivity= mainActivity;
+    }
+
     @Override
     public void onItemClick(View v, int position) {
         // TODO : 아이템 클릭 이벤트를 MainActivity에서 처리.
-        TextView stockDataCodeView = v.findViewById(R.id.stockDataCode);
-        stockDataCodeView.setText("complete");
+        mainActivity.inqueryStockDataInform = mainActivity.searchAdapter.getItem(position);
+        mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
     }
 }

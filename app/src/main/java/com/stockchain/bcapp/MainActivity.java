@@ -2,22 +2,20 @@ package com.stockchain.bcapp;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.StockDataInform;
+
+interface OnBackPressedListener{
+    void onBackPressed();
+}
 
 public class MainActivity extends AppCompatActivity {
     MainHomeFragment mainHomeFragment;
@@ -26,11 +24,14 @@ public class MainActivity extends AppCompatActivity {
     MainRankFragment mainRankFragment;
     MainSettingFragment mainSettingFragment;
     MainSearchFragment mainSearchFragment;
+    MainStockInqueryFragment mainStockInqueryFragment;
+//    MainStockTransactionFragment mainStockTransactionFragment;
 
     SearchView searchView;
     BottomNavigationView bottomNavigationView;
     RecyclerView recyclerView;
     SearchAdapter searchAdapter;
+    StockDataInform inqueryStockDataInform;
 
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
@@ -55,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
         mainRankFragment = new MainRankFragment();
         mainSettingFragment = new MainSettingFragment();
         mainSearchFragment = new MainSearchFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).commit();
+        mainStockInqueryFragment = new MainStockInqueryFragment();
+//        mainStockTransactionFragment = new MainStockTransactionFragment();
+        
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -64,19 +67,19 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menu_bottom_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
                         return true;
                     case R.id.menu_bottom_mock:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainMockFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainMockFragment).addToBackStack(null).commit();
                         return true;
                     case R.id.menu_bottom_feed:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainFeedFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainFeedFragment).addToBackStack(null).commit();
                         return true;
                     case R.id.menu_bottom_rank:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainRankFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainRankFragment).addToBackStack(null).commit();
                         return true;
                     case R.id.menu_bottom_setting:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSettingFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSettingFragment).addToBackStack(null).commit();
                         return true;
                 }
                 return false;
@@ -118,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
+            getSupportFragmentManager().popBackStackImmediate();
         }
-        else {
+        else{
             super.onBackPressed();
         }
     }

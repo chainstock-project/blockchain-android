@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context=".StockTransactionSellFragment" >
+
+
+    <TextView
+        android:id="@+id/sellName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삼성전자"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sellCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="종목코드"
+        app:layout_constraintBottom_toBottomOf="@+id/sellName"
+        app:layout_constraintStart_toEndOf="@+id/sellName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sellMarketType"
+        android:layout_width="27dp"
+        android:layout_height="19dp"
+        android:layout_marginEnd="10dp"
+        android:text="시장종류"
+        app:layout_constraintBottom_toBottomOf="@+id/sellName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textSellPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="매도가"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sellName" />
+
+    <TextView
+        android:id="@+id/sellPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="10,000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textSellPrice"
+        app:layout_constraintEnd_toEndOf="parent"></TextView>
+
+    <TextView
+        android:id="@+id/textSellCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="매도량"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSellPrice"></TextView>
+
+    <EditText
+        android:id="@+id/buyCountInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/textSellCount"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textTotalSellPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:text="총매도가"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSellCount" />
+    <TextView
+        android:id="@+id/totaSellPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100,000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textTotalSellPrice"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textSellRemainBalances"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="가용자산"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTotalSellPrice" />
+
+
+    <TextView
+    android:id="@+id/SellRemainBalances"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="100,000 -> 90,000"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toBottomOf="@+id/textSellRemainBalances"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textTotalSellCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="보유수량"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSellRemainBalances" />
+
+    <TextView
+        android:id="@+id/totalBuyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10 -> 20"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textTotalSellCount"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/buttonBuy"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="100dp"
+        android:text="매도하기"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

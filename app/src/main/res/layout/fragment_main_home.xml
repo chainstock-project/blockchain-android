@@ -313,7 +313,7 @@
             </LinearLayout>
 
             <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/kospiChart"
+                android:id="@+id/stockChart"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginStart="10dp"
@@ -336,7 +336,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
+                app:layout_constraintTop_toBottomOf="@+id/stockChart" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
