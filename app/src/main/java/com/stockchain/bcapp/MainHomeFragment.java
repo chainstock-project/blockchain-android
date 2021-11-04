@@ -35,20 +35,20 @@ public class MainHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_main_home, container, false);
         //set asset
-        try {
-            Context ctx = getActivity().getApplicationContext();
-            PreferenceManager pm = new PreferenceManager();
-            String username = pm.getString(ctx, "username");
-            String address = pm.getString(ctx, "address");
-
-            StockTransaction stockTransaction = new StockTransaction(ctx);
-
-            ArrayList<StockTransactionInform> stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
-            StockBankInform stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
-            ArrayList<StockTransactionInform> stockTransactionTop3 = stockTransaction.getStockTransactionTop3(stockTransactionInformList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Context ctx = getActivity().getApplicationContext();
+//            PreferenceManager pm = new PreferenceManager();
+//            String username = pm.getString(ctx, "username");
+//            String address = pm.getString(ctx, "address");
+//
+//            StockTransaction stockTransaction = new StockTransaction(ctx);
+//
+//            ArrayList<StockTransactionInform> stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
+//            StockBankInform stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
+//            ArrayList<StockTransactionInform> stockTransactionTop3 = stockTransaction.getStockTransactionTop3(stockTransactionInformList);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         //set graph
         ArrayList<Entry> values = new ArrayList<>();

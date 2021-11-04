@@ -7,7 +7,7 @@
     tools:context=".MainSettingFragment" >
 
     <Button
-        android:id="@+id/buttoonLogout"
+        android:id="@+id/buttonLogout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

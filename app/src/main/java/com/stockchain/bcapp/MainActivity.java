@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView feedRecyclerView;
     FeedAdapter feedAdapter;
+
+    RecyclerView rankRecyclerView;
+    RankAdapter rankAdapter;
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
     }
