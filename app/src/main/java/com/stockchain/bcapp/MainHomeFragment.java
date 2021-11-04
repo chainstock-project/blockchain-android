@@ -34,17 +34,6 @@ public class MainHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_main_home, container, false);
-        MainActivity mainActivity = (MainActivity)getActivity();
-        SearchView searchView = mainActivity.getSearchView();
-        if(searchView != null){
-            searchView.setIconified(true);
-            searchView.onActionViewCollapsed();
-            ActionBar actionBar = mainActivity.getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
-            bottomNavigationView.setVisibility(View.VISIBLE);
-        }
-
         //set asset
         try {
             Context ctx = getActivity().getApplicationContext();

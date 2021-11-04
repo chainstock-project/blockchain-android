@@ -18,8 +18,8 @@ interface OnBackPressedListener{
 }
 
 public class MainActivity extends AppCompatActivity {
+    Menu menu;
     MainHomeFragment mainHomeFragment;
-    MainMockFragment mainMockFragment;
     MainFeedFragment mainFeedFragment;
     MainRankFragment mainRankFragment;
     MainSettingFragment mainSettingFragment;
@@ -27,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
     MainStockInqueryFragment mainStockInqueryFragment;
 //    MainStockTransactionFragment mainStockTransactionFragment;
 
-    SearchView searchView;
     BottomNavigationView bottomNavigationView;
-    RecyclerView recyclerView;
+    SearchView searchView;
+    RecyclerView searchRecyclerView;
     SearchAdapter searchAdapter;
+    RecyclerView mockRecyclerView;
+    MockStatusAdapter mockStatusAdapter;
+
     StockDataInform inqueryStockDataInform;
 
     public BottomNavigationView getBottomNavigationView() {
@@ -51,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainHomeFragment = new MainHomeFragment();
-        mainMockFragment = new MainMockFragment();
         mainFeedFragment = new MainFeedFragment();
         mainRankFragment = new MainRankFragment();
         mainSettingFragment = new MainSettingFragment();
@@ -67,19 +69,20 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menu_bottom_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).commit();
                         return true;
                     case R.id.menu_bottom_mock:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainMockFragment).addToBackStack(null).commit();
+                        MainMockFragment mainMockFragment = new MainMockFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainMockFragment).commit();
                         return true;
                     case R.id.menu_bottom_feed:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainFeedFragment).addToBackStack(null).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainFeedFragment).commit();
                         return true;
                     case R.id.menu_bottom_rank:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainRankFragment).addToBackStack(null).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainRankFragment).commit();
                         return true;
                     case R.id.menu_bottom_setting:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSettingFragment).addToBackStack(null).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSettingFragment).commit();
                         return true;
                 }
                 return false;
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
         searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
         searchView.setQueryHint("주식이름입력");
@@ -122,10 +126,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
-            getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().popBackStack();
         }
         else{
             super.onBackPressed();
         }
     }
+}
+
+interface OnItemClickListener {
+    void onItemClick(View v, int position) ;
 }
