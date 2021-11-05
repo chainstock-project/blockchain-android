@@ -7,7 +7,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.stockchain.cosmos.Account;
 import com.stockchain.cosmos.BlockChain;
+import com.stockchain.cosmos.PreferenceManager;
+import com.stockchain.cosmos.WalletInform;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class LoadingActivity extends AppCompatActivity {
 
@@ -21,7 +27,6 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     class LoadingThread extends Thread{
-        Handler handler = new Handler();
         @Override
         public void run() {
             TextView loading_meesage = findViewById(R.id.loading_message);
@@ -53,15 +58,24 @@ public class LoadingActivity extends AppCompatActivity {
                 loading_meesage.setText(node_progress_message);
 
                 if((latestHeight - downloadedHeight) < 2){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                    break;
+                    Account ac = new Account(getApplicationContext(), getString(R.string.server_ip));
+                    PreferenceManager pm = new PreferenceManager();
+                    String username2 = pm.getString(getApplicationContext(), "username");
+//                    pm.removeKey(getApplicationContext(), "username");
+                    String username = pm.getString(getApplicationContext(), "username");
+
+                    if(ac.checkLogin(username)){
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                    else {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
                 }
             }
         }

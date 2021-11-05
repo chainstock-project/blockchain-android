@@ -54,14 +54,10 @@ public class SigninActivity extends AppCompatActivity {
                         String address = ac.getAddressByUsernameLocal(username);
                         if (ac.walletRegisterBlockchain(username, address)) {
                             while (!ac.isUsernameExistsBlockchain(username));
-                            PreferenceManager pm = new PreferenceManager();
-                            pm.setString(getApplicationContext(), "username", username);
-                            pm.setString(getApplicationContext(), "address", address);
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            String messege = "mnemonic : " + mnemonic + "\n\nmnemonic은 로그인시 필요니다. 기록해두십시오.";
+                            Tools.showDialog(SigninActivity.this, "회원가입성공", messege);
                         } else {
-                            Tools.showDialog(SigninActivity.this, "회원가입", "회원가입 실패");
+                            Tools.showDialog(SigninActivity.this, "회원가입", "블록체인 등록에 실패하셨습니다.");
                        }
                     } catch (IOException ioException) {
                         Tools.showDialog(SigninActivity.this, "회원가입", "지갑생성에 실패했습니다.");

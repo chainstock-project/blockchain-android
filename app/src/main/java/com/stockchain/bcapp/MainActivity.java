@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.PreferenceManager;
 import com.stockchain.cosmos.StockDataInform;
 
 interface OnBackPressedListener{
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mainHomeFragment = new MainHomeFragment();
         mainFeedFragment = new MainFeedFragment();
         mainRankFragment = new MainRankFragment();
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         mainSearchFragment = new MainSearchFragment();
         mainStockInqueryFragment = new MainStockInqueryFragment();
 //        mainStockTransactionFragment = new MainStockTransactionFragment();
-        
+
         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

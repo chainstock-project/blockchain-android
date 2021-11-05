@@ -172,6 +172,7 @@ public class Account {
             return false;
         }
     }
+
     public boolean isUsernameExistsBlockchain(String username){
         try {
             ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-user", username, "--home", homeDir);
@@ -188,23 +189,7 @@ public class Account {
             return false;
         }
     }
-    public boolean isAddressExistsBlockchain(String address) {
-        try {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "account", address, "--home", homeDir);
-            Process process = builder.start();
 
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if (line == null) {
-                //pub_key없을시 error
-                return false;
-            } else {
-                return true;
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
     public String getAddressByUsernameLocal(String username) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "-a", "--keyring-backend", "test", "--home", homeDir);
         Process process = builder.start();
@@ -215,6 +200,34 @@ public class Account {
             throw new IOException("local account not exists");
         }
         return line;
+    }
+
+    public String getAddressByUsernameBlockChain(String username) throws IOException {
+            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-user", username, "--home", homeDir);
+            Process process = builder.start();
+
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = stdOut.readLine();
+            if (line == null) {
+                throw new IOException("not exists");
+            } else {
+                String[] lineSplit = stdOut.readLine().split(" ");
+                String address = lineSplit[lineSplit.length-1];
+                return address;
+            }
+    }
+    public boolean checkLogin(String username){
+        try {
+            String localAddress = getAddressByUsernameLocal(username);
+            String blockchainAddress = getAddressByUsernameBlockChain(username);
+            if (localAddress.equals(blockchainAddress)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 }
