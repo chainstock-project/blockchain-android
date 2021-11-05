@@ -190,16 +190,21 @@ public class Account {
         }
     }
 
-    public String getAddressByUsernameLocal(String username) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "-a", "--keyring-backend", "test", "--home", homeDir);
-        Process process = builder.start();
+    public String getAddressByUsernameLocal(String username){
+        try {
+            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "-a", "--keyring-backend", "test", "--home", homeDir);
+            Process process = builder.start();
 
-        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = stdOut.readLine();
-        if(line==null){
-            throw new IOException("local account not exists");
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = stdOut.readLine();
+            if(line==null){
+                throw new IOException("local account not exists");
+            }
+            return line;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return line;
     }
 
     public String getAddressByUsernameBlockChain(String username) throws IOException {

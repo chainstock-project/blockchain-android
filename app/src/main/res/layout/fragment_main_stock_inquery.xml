@@ -94,7 +94,7 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stockChart">
+                app:layout_constraintTop_toBottomOf="@+id/kospiChart">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/previouseCloseAmount"
@@ -131,7 +131,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -151,7 +151,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/numberOfStock"
@@ -164,7 +164,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -201,7 +201,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/marketCap"
@@ -214,7 +214,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -234,7 +234,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/marketRank"
@@ -247,7 +247,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -267,7 +267,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/parvalue"
@@ -280,7 +280,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -300,7 +300,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/tradingUnit"
@@ -313,7 +313,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -349,7 +349,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/PER"
@@ -362,7 +362,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -382,7 +382,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/EPS"
@@ -395,7 +395,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -415,7 +415,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/PBR"
@@ -428,7 +428,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -448,7 +448,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/BPS"
@@ -461,7 +461,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -481,7 +481,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
                             android:id="@+id/inderstryPER"
@@ -494,7 +494,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/stockChart" />
+                            app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

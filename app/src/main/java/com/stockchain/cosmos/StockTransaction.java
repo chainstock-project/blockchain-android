@@ -45,12 +45,12 @@ public class StockTransaction {
 
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
+
+        ArrayList<StockTransactionInform> StockTransactionInformList = new ArrayList<StockTransactionInform>();
         if (line == null) {
-            throw new IOException("dosen't exists");
+            return StockTransactionInformList;
         }else {
             stdOut.readLine(); stdOut.readLine();
-
-            ArrayList<StockTransactionInform> StockTransactionInformList = new ArrayList<StockTransactionInform>();
             while ((line = stdOut.readLine()) != null) {
                 String[] line_split = line.split(" ");
                 String code = line_split[line_split.length - 1].replace("\"", "");

@@ -51,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (ac.checkLogin(username)){
                         PreferenceManager pm = new PreferenceManager();
                         pm.setString(getApplicationContext(), "username", username);
-//                        String address = ac.getAddressByUsernameLocal(username);
-//                        pm.setString(getApplicationContext(), "address", address);
+                        String address = ac.getAddressByUsernameLocal(username);
+                        pm.setString(getApplicationContext(), "address", address);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();

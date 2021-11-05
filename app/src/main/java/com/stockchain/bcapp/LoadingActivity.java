@@ -60,7 +60,6 @@ public class LoadingActivity extends AppCompatActivity {
                 if((latestHeight - downloadedHeight) < 2){
                     Account ac = new Account(getApplicationContext(), getString(R.string.server_ip));
                     PreferenceManager pm = new PreferenceManager();
-                    String username2 = pm.getString(getApplicationContext(), "username");
 //                    pm.removeKey(getApplicationContext(), "username");
                     String username = pm.getString(getApplicationContext(), "username");
 
