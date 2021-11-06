@@ -10,8 +10,9 @@
 
     <TextView
         android:id="@+id/sellName"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:singleLine="false"
         android:text="삼성전자"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -141,10 +142,10 @@
         android:id="@+id/buttonSell"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginTop="100dp"
         android:text="매도하기"
         android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTotalSellCount" />
 </androidx.constraintlayout.widget.ConstraintLayout>

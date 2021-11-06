@@ -66,11 +66,9 @@ public class    MainSearchFragment extends Fragment {
 
 class onQueryTextSearchView implements SearchView.OnQueryTextListener{
     MainActivity mainActivity;
-    ArrayList<StockDataInform> stockDataList;
 
     onQueryTextSearchView(MainActivity mainActivity){
         this.mainActivity = mainActivity;
-        this.stockDataList = mainActivity.stockDataList;
     }
 
     @Override
@@ -84,7 +82,7 @@ class onQueryTextSearchView implements SearchView.OnQueryTextListener{
     @Override
     public boolean onQueryTextChange(String newText) {
         try {
-            ArrayList<StockDataInform> stockDataInforms = StockData.searchStock(stockDataList, newText);
+            ArrayList<StockDataInform> stockDataInforms = StockData.searchStock(mainActivity.stockDataList, newText);
             mainActivity.searchAdapter.setItems(stockDataInforms);
             mainActivity.searchRecyclerView.setAdapter(mainActivity.searchAdapter);
             return true;

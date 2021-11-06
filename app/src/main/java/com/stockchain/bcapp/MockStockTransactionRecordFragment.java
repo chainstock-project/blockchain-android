@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.stockchain.cosmos.StockTransaction;
 import com.stockchain.cosmos.StockTransactionInform;
 import com.stockchain.cosmos.StockTransactionRecordInform;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -32,12 +34,8 @@ public class MockStockTransactionRecordFragment extends Fragment {
         mainActivity.mockRecordRecyclerView.setLayoutManager(layoutManager);
 
         mainActivity.mockRecordAdapter = new MockStockTransactionRecordAdapter();
-        ArrayList<StockTransactionRecordInform> StockTransactionRecordInformList = new ArrayList<>();
-        StockTransactionRecordInformList.add(new StockTransactionRecordInform("2021-10-10", "DATE"));
-        StockTransactionRecordInformList.add(new StockTransactionRecordInform("00010","name",1000000, 5,"2021-10-10", "BUY"));
-        StockTransactionRecordInformList.add(new StockTransactionRecordInform("00010","name",10000000,10,"2021-10-10", "SELL"));
-        mainActivity.mockRecordAdapter.setItems(StockTransactionRecordInformList);
 
+        mainActivity.mockRecordAdapter.setItems(mainActivity.stockTransactionRecordInformList);
         mainActivity.mockRecordRecyclerView.setAdapter(mainActivity.mockRecordAdapter);
 
         return rootView;
@@ -138,8 +136,8 @@ class MockStockTransactionRecordAdapter extends RecyclerView.Adapter<RecyclerVie
 
         public void setItem(StockTransactionRecordInform item){
             recordBuyName.setText(item.getName());
-            recordBuyPrice.setText(String.valueOf(item.getAmount()));
-            recordBuyCount.setText(String.valueOf(item.getCount()));
+            recordBuyPrice.setText("매수가 "+String.valueOf(item.getAmount())+"원");
+            recordBuyCount.setText(String.valueOf(item.getCount())+"주");
         }
     }
 
@@ -157,8 +155,8 @@ class MockStockTransactionRecordAdapter extends RecyclerView.Adapter<RecyclerVie
 
         public void setItem(StockTransactionRecordInform item){
             recordSellName.setText(item.getName());
-            recordSellPrice.setText(String.valueOf(item.getAmount()));
-            recordSellCount.setText(String.valueOf(item.getCount()));
+            recordSellPrice.setText("매도가 " +String.valueOf(item.getAmount())+"원");
+            recordSellCount.setText(String.valueOf(item.getCount())+"주");
 
         }
     }

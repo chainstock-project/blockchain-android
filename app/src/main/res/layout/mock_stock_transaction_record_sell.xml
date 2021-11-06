@@ -8,6 +8,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
+        android:layout_marginTop="5dp"
         app:cardBackgroundColor="#3F51B5"
         app:cardCornerRadius="15dp"
         app:cardElevation="5dp">
@@ -19,20 +20,22 @@
 
             <TextView
                 android:id="@+id/recordSellName"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:singleLine="false"
                 android:text="삼성전자"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/recordSellPrice"
-                android:layout_width="0dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="매도가 100원"
+                android:textAlignment="viewEnd"
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

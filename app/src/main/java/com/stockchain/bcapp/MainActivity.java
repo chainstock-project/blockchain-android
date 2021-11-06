@@ -18,6 +18,7 @@ import com.stockchain.cosmos.StockDataDetailInform;
 import com.stockchain.cosmos.StockDataInform;
 import com.stockchain.cosmos.StockTransaction;
 import com.stockchain.cosmos.StockTransactionInform;
+import com.stockchain.cosmos.StockTransactionRecordInform;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     StockDataInform inqueryStockDataInform;
     ArrayList<StockTransactionInform> stockTransactionInformList;
     ArrayList<StockDataInform> stockDataList;
+    ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList;
     StockBankInform stockBankInform;
 
     MainHomeFragment mainHomeFragment;
@@ -81,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
             stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
+            stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(address);
             stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
+
             StockData stockData = new StockData(getApplicationContext());
             stockDataList = stockData.getStockDataList();
         } catch (IOException e) {

@@ -35,8 +35,9 @@
 
                     <TextView
                         android:id="@+id/textStockName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="220dp"
                         android:layout_height="wrap_content"
+                        android:singleLine="false"
                         android:text="주식이름"
                         android:textSize="34sp"
                         android:textStyle="bold"
@@ -55,9 +56,11 @@
 
                     <TextView
                         android:id="@+id/textDayOverDayAmount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="현재가"
+                        android:singleLine="false"
+                        android:textAlignment="viewEnd"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"

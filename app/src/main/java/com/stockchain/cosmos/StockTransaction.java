@@ -164,7 +164,8 @@ public class StockTransaction {
         }else {
             stdOut.readLine(); stdOut.readLine();
 
-            ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList = new ArrayList<StockTransactionRecordInform>();
+            ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList = new ArrayList<>();
+            StockData stockData = new StockData(ctx);
             while ((line = stdOut.readLine()) != null) {
                 String[] line_split = line.split(" ");
                 long amount = Long.parseLong(line_split[line_split.length - 1]);
@@ -173,9 +174,8 @@ public class StockTransaction {
                 line_split = line.split(" ");
                 String code = line_split[line_split.length - 1].replace("\"", "");
 
-                line = stdOut.readLine();
-                line_split = line.split(" ");
-                String name = line_split[line_split.length - 1].replace("\"", "");
+                StockDataInform stockDataInform = stockData.getStockData(code);
+                String name = stockDataInform.getName();
 
                 line = stdOut.readLine();
                 line_split = line.split(" ");
@@ -192,7 +192,7 @@ public class StockTransaction {
                 StockTransactionRecordInform stockTransactionRecordInform = new StockTransactionRecordInform(code, name, amount, count, date, recordType);
                 stockTransactionRecordInformList.add(stockTransactionRecordInform);
             }
-
+            Collections.reverse(stockTransactionRecordInformList);
             return stockTransactionRecordInformList;
         }
     }

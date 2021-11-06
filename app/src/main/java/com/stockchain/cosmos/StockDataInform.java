@@ -14,10 +14,11 @@ public class StockDataInform {
         this.amount = amount;
         this.date = date;
     }
-    public StockDataInform(String code, String name, String market_type){
+    public StockDataInform(String code, String name, String market_type, int amount){
         this.code = code;
         this.name = name;
         this.market_type = market_type;
+        this.amount = amount;
     }
 
     public String getCode() {

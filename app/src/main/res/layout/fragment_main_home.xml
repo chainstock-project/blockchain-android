@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout"
@@ -27,9 +27,9 @@
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="15dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -55,8 +55,9 @@
 
                     <TextView
                         android:id="@+id/assetCurrentTotalAmount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
+                        android:singleLine="false"
                         android:text="$100,000"
                         android:textSize="34sp"
                         android:textStyle="bold"
@@ -65,14 +66,16 @@
 
                     <TextView
                         android:id="@+id/assetTotalEarningPrice"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
                         android:text="%1.5"
-                        android:textSize="16sp"
+                        android:textAlignment="viewEnd"
+                        android:textSize="34sp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="@+id/assetAllPriceText"
-                        app:layout_constraintTop_toBottomOf="@+id/assetCurrentTotalAmount" />
+                        app:layout_constraintBottom_toBottomOf="@+id/assetCurrentTotalAmount"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/assetCurrentTotalAmount" />
 
                     <TextView
                         android:id="@+id/assetBalancesText"
@@ -84,20 +87,19 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@+id/assetAllPriceText"
-                        app:layout_constraintTop_toBottomOf="@+id/assetTotalEarningPrice" />
+                        app:layout_constraintTop_toBottomOf="@+id/assetCurrentTotalAmount" />
 
                     <TextView
                         android:id="@+id/assetBalances"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
                         android:layout_marginEnd="15dp"
                         android:gravity="center"
                         android:text="가용 자산"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/assetTotalEarningPrice" />
+                        app:layout_constraintTop_toTopOf="@+id/assetBalancesText" />
 
                     <TextView
                         android:id="@+id/assetCurrentStockTotalAmountText"
@@ -117,203 +119,202 @@
                         android:id="@+id/assetCurrentStockTotalAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
                         android:layout_marginEnd="15dp"
                         android:gravity="center"
                         android:text="가용 자산"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/assetBalances" />
+                        app:layout_constraintTop_toTopOf="@+id/assetCurrentStockTotalAmountText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linearLayout2"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginStart="10dp"-->
-<!--                android:layout_marginTop="30dp"-->
-<!--                android:layout_marginEnd="10dp"-->
-<!--                android:orientation="horizontal"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/cardView">-->
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/linearLayout2"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_marginStart="10dp"-->
+            <!--                android:layout_marginTop="30dp"-->
+            <!--                android:layout_marginEnd="10dp"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/cardView">-->
 
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:layout_marginRight="5dp"-->
-<!--                    android:layout_marginBottom="5dp"-->
-<!--                    android:layout_weight="1">-->
+            <!--                <androidx.cardview.widget.CardView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginLeft="5dp"-->
+            <!--                    android:layout_marginTop="5dp"-->
+            <!--                    android:layout_marginRight="5dp"-->
+            <!--                    android:layout_marginBottom="5dp"-->
+            <!--                    android:layout_weight="1">-->
 
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:layout_marginBottom="5dp">-->
+            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="5dp"-->
+            <!--                        android:layout_marginTop="5dp"-->
+            <!--                        android:layout_marginRight="5dp"-->
+            <!--                        android:layout_marginBottom="5dp">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top1Name"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top1Name"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="parent"-->
+            <!--                            app:layout_constraintTop_toTopOf="parent" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top1Count"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top1Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top1Name" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top1Count"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top1Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top1Name" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top1Amount"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top1Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top1Count" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top1Amount"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top1Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top1Count" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top1Rate"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginStart="15dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toEndOf="@+id/top1Amount"-->
-<!--                            app:layout_constraintTop_toTopOf="@+id/top1Amount" />-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top1Rate"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginStart="15dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toEndOf="@+id/top1Amount"-->
+            <!--                            app:layout_constraintTop_toTopOf="@+id/top1Amount" />-->
+            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--                </androidx.cardview.widget.CardView>-->
 
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:layout_marginRight="5dp"-->
-<!--                    android:layout_marginBottom="5dp"-->
-<!--                    android:layout_weight="1">-->
+            <!--                <androidx.cardview.widget.CardView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginTop="5dp"-->
+            <!--                    android:layout_marginRight="5dp"-->
+            <!--                    android:layout_marginBottom="5dp"-->
+            <!--                    android:layout_weight="1">-->
 
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:layout_marginBottom="5dp">-->
+            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="5dp"-->
+            <!--                        android:layout_marginTop="5dp"-->
+            <!--                        android:layout_marginRight="5dp"-->
+            <!--                        android:layout_marginBottom="5dp">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top2Name"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top2Name"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="parent"-->
+            <!--                            app:layout_constraintTop_toTopOf="parent" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top2Count"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top2Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top2Name" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top2Count"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top2Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top2Name" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top2Amount"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top2Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top2Count" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top2Amount"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top2Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top2Count" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top2Rate"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginStart="15dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toEndOf="@+id/top2Amount"-->
-<!--                            app:layout_constraintTop_toTopOf="@+id/top2Amount" />-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top2Rate"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginStart="15dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toEndOf="@+id/top2Amount"-->
+            <!--                            app:layout_constraintTop_toTopOf="@+id/top2Amount" />-->
+            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--                </androidx.cardview.widget.CardView>-->
 
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:layout_marginRight="5dp"-->
-<!--                    android:layout_marginBottom="5dp"-->
-<!--                    android:layout_weight="1">-->
+            <!--                <androidx.cardview.widget.CardView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginTop="5dp"-->
+            <!--                    android:layout_marginRight="5dp"-->
+            <!--                    android:layout_marginBottom="5dp"-->
+            <!--                    android:layout_weight="1">-->
 
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:layout_marginBottom="5dp">-->
+            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="5dp"-->
+            <!--                        android:layout_marginTop="5dp"-->
+            <!--                        android:layout_marginRight="5dp"-->
+            <!--                        android:layout_marginBottom="5dp">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top3Name"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top3Name"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="parent"-->
+            <!--                            app:layout_constraintTop_toTopOf="parent" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top3Count"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top3Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top3Name" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top3Count"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top3Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top3Name" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top3Amount"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/top3Name"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/top3Count" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top3Amount"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginTop="5dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toStartOf="@+id/top3Name"-->
+            <!--                            app:layout_constraintTop_toBottomOf="@+id/top3Count" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/top3Rate"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginStart="15dp"-->
-<!--                            android:text="TextView"-->
-<!--                            android:textSize="12sp"-->
-<!--                            app:layout_constraintStart_toEndOf="@+id/top3Amount"-->
-<!--                            app:layout_constraintTop_toTopOf="@+id/top3Amount" />-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
-<!--            </LinearLayout>-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/top3Rate"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginStart="15dp"-->
+            <!--                            android:text="TextView"-->
+            <!--                            android:textSize="12sp"-->
+            <!--                            app:layout_constraintStart_toEndOf="@+id/top3Amount"-->
+            <!--                            app:layout_constraintTop_toTopOf="@+id/top3Amount" />-->
+            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--                </androidx.cardview.widget.CardView>-->
+            <!--            </LinearLayout>-->
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -357,9 +358,10 @@
                 android:layout_marginBottom="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

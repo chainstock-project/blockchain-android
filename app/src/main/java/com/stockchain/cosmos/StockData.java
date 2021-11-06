@@ -1,6 +1,7 @@
 package com.stockchain.cosmos;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 import org.jsoup.Jsoup;
@@ -66,7 +67,7 @@ public class StockData {
             String market_type = line_split[line_split.length - 1];
 
             line = stdOut.readLine();
-            line_split = line.split(" ");
+            line_split = line.split("name: ");
             String name = line_split[line_split.length - 1];
 
             StockDataInform stockDataInform = new StockDataInform(get_code, name, market_type, amount, date);
@@ -109,7 +110,7 @@ public class StockData {
         String market_type = line_split[line_split.length - 1];
 
         line = stdOut.readLine();
-        line_split = line.split(" ");
+        line_split = line.split("name: ");
         String name = line_split[line_split.length - 1];
 
         StockDataInform stockDataInform = new StockDataInform(get_code, name, market_type, amount, date);
@@ -130,7 +131,7 @@ public class StockData {
                     String stockCode = stockDataInform.code;
                     String markType = stockDataInform.market_type;
                     String dayOverDayAmount = String.valueOf(stockDataInform.amount);
-
+//                    textDayOverDayAmount
                     Elements dayOverDayRateElements = document.select("#chart_area > div.rate_info > div > p.no_exday > em:nth-child(4) > span:not(span.blind)");
                     String dayOverDayRate = "";
                     for(int i=0;i<dayOverDayRateElements.size()-1;i++){
@@ -143,8 +144,9 @@ public class StockData {
                         previousClosePrice += previousClosePriceElements.get(i).text();
                     }
                     previousClosePrice = previousClosePrice.replace(",","");
-                    StockTransactionInform stockTransactionInform = StockTransaction.searchStockTransactionInform(list, stockCode);
+
                     String numberOfStock;
+                    StockTransactionInform stockTransactionInform = StockTransaction.searchStockTransactionInform(list, stockCode);
                     if(stockTransactionInform == null) {
                         numberOfStock = "0";
                     }
@@ -152,25 +154,43 @@ public class StockData {
                          numberOfStock = String.valueOf(stockTransactionInform.getCount());
                     }
 
-                    String marketSum = document.select("#_market_sum").get(0).text();
-                    String marketRanking = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(2) > td > em").get(0).text();
-                    String faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
-                    String tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
+                    String marketSum = "N/A";
+                    try{
+                        marketSum = document.select("#_market_sum").get(0).text();
+                    }catch (Exception e){}
+                    String marketRanking = "N/A";
+                    try{
+                        marketRanking = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(2) > td > em").get(0).text();
+                    }catch (Exception e){}
+                    String faceValue = "N/A";
+                    try{
+                        faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
+                    }catch (Exception e){}
+                    String tradingUnit = "N/A";
+                    try{
+                        tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
+                    }catch (Exception e){}
 
                     String PER="N/A";
+                    try{
+                        PER = document.select("#_per").get(0).text();
+                    }catch (Exception e){}
                     String EPS="N/A";
+                    try{
+                        EPS = document.select("#_eps").get(0).text();
+                    }catch (Exception e){}
                     String PBR="N/A";
+                    try{
+                        PBR = document.select("#_pbr").get(0).text();
+                    }catch (Exception e){}
                     String BPS="N/A";
+                    try{
+                        BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
+                    }catch (Exception e){}
                     String sameInderstryPER = "N/A";
                     try {
-                        PER = document.select("#_per").get(0).text();
-                        EPS = document.select("#_eps").get(0).text();
-                        PBR = document.select("#_pbr").get(0).text();
-                        BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
                         sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text();
-                    }catch (Exception e){
-
-                    }
+                    }catch (Exception e){}
 
                     stockDataDetailInform = new StockDataDetailInform(date, stockCode, name, markType, dayOverDayAmount, dayOverDayRate, previousClosePrice, numberOfStock, marketSum, marketRanking, faceValue, tradingUnit, PER,EPS, PBR, BPS, sameInderstryPER);
                 } catch (IOException e) {
@@ -253,14 +273,11 @@ public class StockData {
     static public ArrayList<StockDataInform> searchStock(ArrayList<StockDataInform> stockDataInformList, String name) {
         ArrayList<StockDataInform> searchedStockDataInformList = new ArrayList<>();
 
-        Iterator<StockDataInform> iterator = stockDataInformList.iterator();
-        while (iterator.hasNext()) {
-            StockDataInform stockDataInform = iterator.next();
-            if (stockDataInform.name.toLowerCase().contains(name.toLowerCase())) {
-                searchedStockDataInformList.add(stockDataInform);
+        for(int i=0;i<stockDataInformList.size();i++){
+            if (stockDataInformList.get(i).name.toLowerCase().contains(name.toLowerCase())) {
+                searchedStockDataInformList.add(stockDataInformList.get(i));
             }
         }
-
         return searchedStockDataInformList;
     }
 
