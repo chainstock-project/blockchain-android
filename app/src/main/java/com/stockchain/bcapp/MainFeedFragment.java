@@ -5,22 +5,18 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.Feed;
 import com.stockchain.cosmos.FeedInform;
-import com.stockchain.cosmos.StockDataInform;
-import com.stockchain.cosmos.StockTransactionRecordInform;
 
 import java.util.ArrayList;
 
@@ -37,39 +33,8 @@ public class MainFeedFragment extends Fragment {
         mainActivity.feedAdapter = new FeedAdapter();
         mainActivity.feedAdapter.setOnItemClickListener(new FeedItemClickListener(mainActivity));
 
-        ArrayList<FeedInform> FeedInformList = new ArrayList<>();
-        FeedInformList.add(new FeedInform("title", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-        FeedInformList.add(new FeedInform("title", "content", "www.naver.com"));
-
+        Feed feed = new Feed();
+        ArrayList<FeedInform> FeedInformList = feed.getRecentFeed();
         mainActivity.feedAdapter.setItems(FeedInformList);
         mainActivity.feedRecyclerView.setAdapter(mainActivity.feedAdapter);
 
@@ -86,7 +51,8 @@ class FeedItemClickListener implements OnItemClickListener {
 
     @Override
     public void onItemClick(View v, int position) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.naver.com"));
+        FeedInform feedInform = mainActivity.feedAdapter.getItem(position);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(feedInform.getUrl()));
         v.getContext().startActivity(intent);
     }
 }
@@ -129,13 +95,13 @@ class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder>{
         return items.get(position);
     }
     // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(FeedItemClickListener listener) {
         this.mListener = listener ;
     }
 
     public class FeedViewHolder extends RecyclerView.ViewHolder{
-        TextView feedTitle;
-        TextView feedContent;
+        TextView feedSubject;
+        TextView feedSummary;
 
         public FeedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,13 +116,13 @@ class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder>{
                 }
             });
 
-            feedTitle = itemView.findViewById(R.id.feedTitle);
-            feedContent = itemView.findViewById(R.id.feedContent);
+            feedSubject = itemView.findViewById(R.id.feedTitle);
+            feedSummary = itemView.findViewById(R.id.feedContent);
         }
 
         public void setItem(FeedInform item){
-            feedTitle.setText(item.getTitle());
-            feedContent.setText(item.getContent());
+            feedSubject.setText(item.getSubject());
+            feedSummary.setText(item.getSummary());
         }
     }
 }

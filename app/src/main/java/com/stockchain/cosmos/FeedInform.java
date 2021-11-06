@@ -1,30 +1,30 @@
 package com.stockchain.cosmos;
 
 public class FeedInform {
-    String title;
-    String content;
+    String subject;
+    String summary;
     String url;
 
-    public FeedInform(String title, String content, String url) {
-        this.title = title;
-        this.content = content;
+    public FeedInform(String subject, String summary, String url) {
+        this.subject = subject;
+        this.summary = summary;
         this.url = url;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getUrl() {
