@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView3"
+                android:id="@+id/mainInform"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +54,7 @@
                         app:layout_constraintTop_toTopOf="@+id/textStockName" />
 
                     <TextView
-                        android:id="@+id/textCurrentAmount"
+                        android:id="@+id/textDayOverDayAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="현재가"
@@ -64,14 +64,14 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textEarningPrice"
+                        android:id="@+id/textDayOverDayRate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="수익율"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textCurrentAmount" />
+                        app:layout_constraintTop_toBottomOf="@+id/textDayOverDayAmount" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -83,18 +83,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView3">
+                app:layout_constraintTop_toBottomOf="@+id/mainInform">
 
             </com.github.mikephil.charting.charts.LineChart>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/previousCardView"
+                android:id="@+id/previousInform"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/kospiChart">
+                app:layout_constraintTop_toBottomOf="@+id/stockChart">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textPreviouseCloseAmount"
+                            android:id="@+id/textPreviousCloseAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -121,7 +121,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
-                            android:id="@+id/previouseCloseAmount"
+                            android:id="@+id/previousCloseAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="27dp"
                             android:layout_marginStart="15dp"
@@ -146,7 +146,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="전일종가"
+                            android:text="보유주식수"
                             android:textAlignment="viewStart"
                             android:textSize="20sp"
                             android:textStyle="bold"
@@ -177,7 +177,7 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/previousCardView">
+                app:layout_constraintTop_toBottomOf="@+id/previousInform">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -192,11 +192,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textMarketCap"
+                            android:id="@+id/textMarketSum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="시가총총액"
+                            android:text="시가총액"
                             android:textAlignment="viewStart"
                             android:textSize="20sp"
                             android:textStyle="bold"
@@ -204,7 +204,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
-                            android:id="@+id/marketCap"
+                            android:id="@+id/marketSum"
                             android:layout_width="wrap_content"
                             android:layout_height="27dp"
                             android:layout_marginStart="15dp"
@@ -229,7 +229,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="시장순"
+                            android:text="시장순위"
                             android:textAlignment="viewStart"
                             android:textSize="20sp"
                             android:textStyle="bold"
@@ -258,11 +258,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textParValue"
+                            android:id="@+id/textFaceValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="액면"
+                            android:text="액면가"
                             android:textAlignment="viewStart"
                             android:textSize="20sp"
                             android:textStyle="bold"
@@ -270,7 +270,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/kospiChart" />
 
                         <TextView
-                            android:id="@+id/parvalue"
+                            android:id="@+id/faceValue"
                             android:layout_width="wrap_content"
                             android:layout_height="27dp"
                             android:layout_marginStart="15dp"

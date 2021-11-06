@@ -12,7 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stockchain.cosmos.PreferenceManager;
+import com.stockchain.cosmos.StockData;
+import com.stockchain.cosmos.StockDataDetailInform;
 import com.stockchain.cosmos.StockDataInform;
+import com.stockchain.cosmos.StockTransaction;
+import com.stockchain.cosmos.StockTransactionInform;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 interface OnBackPressedListener{
     void onBackPressed();
@@ -21,6 +28,8 @@ interface OnBackPressedListener{
 public class MainActivity extends AppCompatActivity {
     Menu menu;
     StockDataInform inqueryStockDataInform;
+    ArrayList<StockTransactionInform> stockTransactionInformList;
+    ArrayList<StockDataInform> stockDataList;
     MainHomeFragment mainHomeFragment;
     MainFeedFragment mainFeedFragment;
     MainRankFragment mainRankFragment;
@@ -63,6 +72,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        PreferenceManager pm = new PreferenceManager();
+        String address = pm.getString(getApplicationContext(), "address");
+        StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
+        try {
+            stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
+        } catch (IOException e) {
+        }
+        StockData stockData = new StockData(getApplicationContext());
+        try {
+            stockDataList = stockData.getStockDataList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mainHomeFragment = new MainHomeFragment();
         mainFeedFragment = new MainFeedFragment();
@@ -110,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("주식이름입력");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnSearchClickListener(new onClickSearchView());
-        searchView.setOnQueryTextListener(new onQueryTextSearchView(this));
+        searchView.setOnQueryTextListener(new onQueryTextSearchView(this, stockDataList));
+
         return true;
     }
 

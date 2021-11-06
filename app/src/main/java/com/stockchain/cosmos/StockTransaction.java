@@ -86,6 +86,16 @@ public class StockTransaction {
         return StockTransactionInformList;
     }
 
+    static public StockTransactionInform searchStockTransactionInform(ArrayList<StockTransactionInform> list, String code){
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).code == code){
+                return list.get(i);
+            }
+        }
+        return null;
+    }
+
+
     private int getCurrentStockTransactionTotalAmount(ArrayList<StockTransactionInform> stockTransactionInformList) throws IOException{
         int amount = 0;
         for(StockTransactionInform h : stockTransactionInformList){

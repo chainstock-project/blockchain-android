@@ -16,15 +16,17 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.StockData;
 import com.stockchain.cosmos.StockDataInform;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class MainSearchFragment extends Fragment {
+public class    MainSearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,7 +46,6 @@ public class MainSearchFragment extends Fragment {
         mainActivity.searchRecyclerView.setLayoutManager(layoutManager);
         mainActivity.searchAdapter = new SearchAdapter();
         mainActivity.searchAdapter.setOnItemClickListener(new SearchVeiwItemClickListener(mainActivity));
-
         return rootView;
     }
 
@@ -68,24 +69,27 @@ public class MainSearchFragment extends Fragment {
 
 class onQueryTextSearchView implements SearchView.OnQueryTextListener{
     MainActivity mainActivity;
+    ArrayList<StockDataInform> stockDataList;
 
-    onQueryTextSearchView(MainActivity mainActivity){
+    onQueryTextSearchView(MainActivity mainActivity, ArrayList<StockDataInform> stockDataList){
         this.mainActivity = mainActivity;
+        this.stockDataList = stockDataList;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        if(mainActivity.searchAdapter.getItemCount()>0){
+            mainActivity.inqueryStockDataInform = mainActivity.searchAdapter.getItem(0);
+            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
+        }
         return true;
     }
     @Override
     public boolean onQueryTextChange(String newText) {
         try {
-            SearchAdapter searchAdapter = mainActivity.searchAdapter;
-            ArrayList<StockDataInform> stockDataInforms = new ArrayList<>();
-            stockDataInforms.add(new StockDataInform("0001", newText, "kospi"));
-            searchAdapter.setItems(stockDataInforms);
-
-            mainActivity.searchRecyclerView.setAdapter(searchAdapter);
+            ArrayList<StockDataInform> stockDataInforms = StockData.searchStock(stockDataList, newText);
+            mainActivity.searchAdapter.setItems(stockDataInforms);
+            mainActivity.searchRecyclerView.setAdapter(mainActivity.searchAdapter);
             return true;
         }catch (NullPointerException e){
             return true;

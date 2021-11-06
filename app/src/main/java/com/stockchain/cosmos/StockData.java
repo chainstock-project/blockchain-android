@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class StockData {
+    private Context ctx;
     private final String blockchainPath;
     private final String homeDir;
 
     public StockData(Context ctx) {
+        this.ctx = ctx;
         this.blockchainPath = ctx.getApplicationInfo().nativeLibraryDir + "/blockchaind.so";
         this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
     }
@@ -114,18 +116,140 @@ public class StockData {
         return stockDataInform;
     }
 
-    public StockDataDetailInform getStockDetail(String code) {
-        StockDataDetailInform stockDataDetailInform = new StockDataDetailInform();
-        return stockDataDetailInform;
+    public StockDataDetailInform getStockDataDetail(StockDataInform stockDataInform, ArrayList<StockTransactionInform> list){
+
+        class StockDataDetail extends Thread {
+            StockDataDetailInform stockDataDetailInform = null;
+            public void setStockDataDetail() {
+                try {
+                    StockTransaction stockTransaction = new StockTransaction(ctx);
+
+                    String url = "https://finance.naver.com/item/main.nhn?code="+stockDataInform.code;
+                    Document document = Jsoup.connect(url).get();
+
+                    String date = stockDataInform.date;
+                    String name = stockDataInform.name;
+                    String stockCode = stockDataInform.code;
+                    String markType = stockDataInform.market_type;
+                    String dayOverDayAmount = String.valueOf(stockDataInform.amount);
+
+                    Elements dayOverDayRateElements = document.select("#chart_area > div.rate_info > div > p.no_exday > em:nth-child(4) > span:not(span.blind)");
+                    String dayOverDayRate = "";
+                    for(int i=0;i<dayOverDayRateElements.size()-1;i++){
+                        dayOverDayRate += dayOverDayRateElements.get(i).text();
+                    }
+
+                    Elements previousClosePriceElements= document.select("#chart_area > div.rate_info > table > tbody > tr:nth-child(1) > td.first > em > span:not(span.blind)");
+                    String previousClosePrice = "";
+                    for(int i=0;i<previousClosePriceElements.size();i++){
+                        previousClosePrice += previousClosePriceElements.get(i).text();
+                    }
+                    previousClosePrice = previousClosePrice.replace(",","");
+                    StockTransactionInform stockTransactionInform = StockTransaction.searchStockTransactionInform(list, stockCode);
+                    String numberOfStock;
+                    if(stockTransactionInform == null) {
+                        numberOfStock = "0";
+                    }
+                    else{
+                         numberOfStock = String.valueOf(stockTransactionInform.getCount());
+                    }
+
+                    String marketSum = document.select("#_market_sum").get(0).text();
+                    String marketRanking = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(2) > td > em").get(0).text();
+                    String faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
+                    String tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
+
+                    String PER = document.select("#_per").get(0).text();
+                    String EPS = document.select("#_eps").get(0).text();
+                    String PBR = document.select("#_pbr").get(0).text();
+                    String BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
+                    String sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text();
+
+                    stockDataDetailInform = new StockDataDetailInform(date, stockCode, name, markType, dayOverDayAmount, dayOverDayRate, previousClosePrice, numberOfStock, marketSum, marketRanking, faceValue, tradingUnit, PER,EPS, PBR, BPS, sameInderstryPER);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void run(){
+                setStockDataDetail();
+            }
+
+            public StockDataDetailInform getStockDataDetailInform() {
+                return stockDataDetailInform;
+            }
+        }
+
+        //main
+        StockDataDetail stockDataDetail = new StockDataDetail();
+        stockDataDetail.start();
+        try {
+            stockDataDetail.join();
+            return stockDataDetail.getStockDataDetailInform();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return stockDataDetail.getStockDataDetailInform();
+        }
     }
 
-    public ArrayList<StockDataInform> searchStock(ArrayList<StockDataInform> stockDataInformList, String name) {
+    public ArrayList<Entry> getStockPrice(String code) {
+        ArrayList<Entry> stockPriceList = new ArrayList<>();
+
+        class StockPrice extends Thread {
+            public void setStockPrice(String code) {
+                try {
+                    int lastPage = 3;
+                    for (int page = 1; page <= lastPage; page++) {
+                        String url = "https://finance.naver.com/item/sise_day.naver?code=035420&page="+page;
+                        Document document = Jsoup.connect(url).get();
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+
+                        for (int i = 3; i <= 7; i++) {
+                            Elements dateElement = document.select("body > table.type2 > tbody > tr:nth-child("+i+") > td:nth-child(1) > span");
+                            Elements numberElement = document.select("body > table.type2 > tbody > tr:nth-child("+i+") > td:nth-child(2) > span");
+                            StockPrice stockPrice;
+                            float date = df.parse(dateElement.get(0).text()).getTime() / 1000;
+                            float number = Float.valueOf(numberElement.get(0).text().replace(",", ""));
+                            stockPriceList.add(new Entry(date, number));
+                        }
+                        for(int i=11;i<=15;i++){
+                            Elements dateElement = document.select("body > table.type2 > tbody > tr:nth-child("+i+") > td:nth-child(1) > span");
+                            Elements numberElement = document.select("body > table.type2 > tbody > tr:nth-child("+i+") > td:nth-child(2) > span");
+                            float date = df.parse(dateElement.get(0).text()).getTime() / 1000;
+                            float number = Float.valueOf(numberElement.get(0).text().replace(",", ""));
+                            stockPriceList.add(new Entry(date, number));
+                        }
+                    }
+                } catch (IOException | ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void run(){
+                setStockPrice(code);
+            }
+        }
+
+        //main
+        StockPrice stockPrice = new StockPrice();
+        stockPrice.start();
+        try {
+            stockPrice.join();
+            Collections.reverse(stockPriceList);
+            return stockPriceList;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return stockPriceList;
+        }
+    }
+
+    static public ArrayList<StockDataInform> searchStock(ArrayList<StockDataInform> stockDataInformList, String name) {
         ArrayList<StockDataInform> searchedStockDataInformList = new ArrayList<>();
 
         Iterator<StockDataInform> iterator = stockDataInformList.iterator();
         while (iterator.hasNext()) {
             StockDataInform stockDataInform = iterator.next();
-            if (stockDataInform.name.contains(name)) {
+            if (stockDataInform.name.toLowerCase().contains(name.toLowerCase())) {
                 searchedStockDataInformList.add(stockDataInform);
             }
         }

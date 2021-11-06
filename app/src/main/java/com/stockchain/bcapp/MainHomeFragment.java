@@ -92,8 +92,6 @@ public class MainHomeFragment extends Fragment {
         kospiXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         kospiChart.setData(kospiData);
 
-
-
         kosdaqChart= (LineChart)rootView.findViewById(R.id.kosdaqChart);
         ArrayList<Entry> kosdaqEntryMonth = stockData.getKosdaqEntryMonth();
         LineDataSet kosdaqSet1 = new LineDataSet(kosdaqEntryMonth, "DataSet 1");
