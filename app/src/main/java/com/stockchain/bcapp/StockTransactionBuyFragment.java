@@ -30,15 +30,6 @@ public class StockTransactionBuyFragment extends Fragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stock_transaction_buy, container, false);
         mainActivity = (MainActivity)getActivity();
 
-        TextView buyName = rootView.findViewById(R.id.buyName);
-        buyName.setText(mainActivity.inqueryStockDataInform.getName());
-        TextView buyCode = rootView.findViewById(R.id.buyCode);
-        buyCode.setText(mainActivity.inqueryStockDataInform.getCode());
-        TextView buyMarketType = rootView.findViewById(R.id.buyMarketType);
-        buyMarketType.setText(mainActivity.inqueryStockDataInform.getMarket_type());
-        TextView buyPrice = rootView.findViewById(R.id.buyPrice);
-        buyPrice.setText(String.valueOf(mainActivity.inqueryStockDataInform.getAmount()));
-
         EditText buyCountInput = rootView.findViewById(R.id.buyCountInput);
         buyCountInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,17 +82,22 @@ public class StockTransactionBuyFragment extends Fragment {
             }
         });
 
+        TextView buyName = rootView.findViewById(R.id.buyName);
+        buyName.setText(mainActivity.inqueryStockDataInform.getName());
+        TextView buyCode = rootView.findViewById(R.id.buyCode);
+        buyCode.setText(mainActivity.inqueryStockDataInform.getCode());
+        TextView buyMarketType = rootView.findViewById(R.id.buyMarketType);
+        buyMarketType.setText(mainActivity.inqueryStockDataInform.getMarket_type());
+        TextView buyPrice = rootView.findViewById(R.id.buyPrice);
+        buyPrice.setText(String.valueOf(mainActivity.inqueryStockDataInform.getAmount()));
         TextView totalBuyPrice = rootView.findViewById(R.id.totalBuyPrice);
         totalBuyPrice.setText("0");
-
         TextView buyRemainBalances = rootView.findViewById(R.id.buyRemainBalances);
         String buyRemainBalancesString = mainActivity.stockBankInform.getBalances() + " -> " + mainActivity.stockBankInform.getBalances();
         buyRemainBalances.setText(buyRemainBalancesString);
-
         TextView buyCount = rootView.findViewById(R.id.buyCount);
         int numberOfStock = StockTransaction.getNumberOfStock(mainActivity.stockTransactionInformList, mainActivity.inqueryStockDataInform.getCode());
         buyCount.setText(numberOfStock + " -> " + numberOfStock);
-
 
         Button buttonBuy= (Button) rootView.findViewById(R.id.buttonBuy) ;
         buttonBuy.setOnClickListener(new onClickButtonBuy());
@@ -137,5 +133,3 @@ public class StockTransactionBuyFragment extends Fragment {
         }
     }
 }
-
-;

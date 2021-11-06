@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textSellPrice"></TextView>
 
     <EditText
-        android:id="@+id/buyCountInput"
+        android:id="@+id/sellCountInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -90,7 +90,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textSellCount" />
     <TextView
-        android:id="@+id/totaSellPrice"
+        android:id="@+id/totalSellPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100,000"
@@ -110,7 +110,7 @@
 
 
     <TextView
-    android:id="@+id/SellRemainBalances"
+    android:id="@+id/sellRemainBalances"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="100,000 -> 90,000"
@@ -129,7 +129,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textSellRemainBalances" />
 
     <TextView
-        android:id="@+id/buyCount"
+        android:id="@+id/sellCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10 -> 20"
@@ -138,7 +138,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/buttonBuy"
+        android:id="@+id/buttonSell"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginBottom="100dp"

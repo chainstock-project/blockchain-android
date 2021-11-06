@@ -31,7 +31,12 @@ public class LoadingActivity extends AppCompatActivity {
         public void run() {
             TextView loading_meesage = findViewById(R.id.loading_message);
             BlockChain bc = new BlockChain(getApplicationContext(), getString(R.string.server_ip));
+
+            PreferenceManager pm = new PreferenceManager();
 //            bc.deleteConfig();
+//            pm.removeKey(getApplicationContext(), "username");
+//            pm.removeKey(getApplicationContext(), "address");
+
             loading_meesage.setText("check created config...");
             if(!bc.checkCreatedConfig()){
                 loading_meesage.setText("createting config...");
@@ -59,8 +64,6 @@ public class LoadingActivity extends AppCompatActivity {
 
                 if((latestHeight - downloadedHeight) < 2){
                     Account ac = new Account(getApplicationContext(), getString(R.string.server_ip));
-                    PreferenceManager pm = new PreferenceManager();
-//                    pm.removeKey(getApplicationContext(), "username");
                     String username = pm.getString(getApplicationContext(), "username");
 
                     if(ac.checkLogin(username)){
