@@ -42,64 +42,49 @@ public class MainHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_home, container, false);
+        MainActivity mainActivity = (MainActivity)getActivity();
 
 
         //set asset
         Context ctx = getActivity().getApplicationContext();
         PreferenceManager pm = new PreferenceManager();
-        String username = pm.getString(ctx, "username");
-        String address = pm.getString(ctx, "address");
-        try {
-            StockTransaction stockTransaction = new StockTransaction(ctx);
-            ArrayList<StockTransactionInform> stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
 
-            StockBankInform stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
-
-            TextView assetCurrentTotalAmount = rootView.findViewById(R.id.assetCurrentTotalAmount);
-            assetCurrentTotalAmount.setText(String.valueOf(stockBankInform.getCurrentTotalAmount()));
-
-            TextView assetTotalEarningPrice = rootView.findViewById(R.id.assetTotalEarningPrice);
-            assetTotalEarningPrice.setText(String.format("%.2f", stockBankInform.getEarningRate()));
-            if(stockBankInform.getEarningRate()<0){
-                assetTotalEarningPrice.setTextColor(Color.parseColor("#ed3738"));
-            }else{
-                assetTotalEarningPrice.setTextColor(Color.parseColor("#097df3"));
-            }
-
-            TextView assetBalances = rootView.findViewById(R.id.assetBalances);
-            assetBalances.setText(String.valueOf(stockBankInform.getBalances()));
-
-            TextView assetCurrentStockTotalAmount = rootView.findViewById(R.id.assetCurrentStockTotalAmount);
-            assetCurrentStockTotalAmount.setText(String.valueOf(stockBankInform.getCurrentStockTotalAmount()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        TextView assetCurrentTotalAmount = rootView.findViewById(R.id.assetCurrentTotalAmount);
+        assetCurrentTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentTotalAmount()));
+        TextView assetTotalEarningPrice = rootView.findViewById(R.id.assetTotalEarningPrice);
+        assetTotalEarningPrice.setText(String.format("%.2f", mainActivity.stockBankInform.getEarningRate()));
+        if(mainActivity.stockBankInform.getEarningRate()<0){
+            assetTotalEarningPrice.setTextColor(Color.parseColor("#ed3738"));
+        }else{
+            assetTotalEarningPrice.setTextColor(Color.parseColor("#097df3"));
         }
+        TextView assetBalances = rootView.findViewById(R.id.assetBalances);
+        assetBalances.setText(String.valueOf(mainActivity.stockBankInform.getBalances()));
+        TextView assetCurrentStockTotalAmount = rootView.findViewById(R.id.assetCurrentStockTotalAmount);
+        assetCurrentStockTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentStockTotalAmount()));
 
         //set graph
         kospiChart= (LineChart)rootView.findViewById(R.id.kospiChart);
-
-        StockData stockData = new StockData(rootView.getContext());
-        ArrayList<Entry> kospiEntryMonth = stockData.getKospiEntryMonth();
+        ArrayList<Entry> kospiEntryMonth = StockData.getKospiEntryMonth();
         LineDataSet kospiSet1 = new LineDataSet(kospiEntryMonth, "kospi price 1");
         kospiSet1.setColor(Color.RED);
         kospiSet1.setDrawCircles(false);
         ArrayList<ILineDataSet> kospiDataSets = new ArrayList<>();
         kospiDataSets.add(kospiSet1); // add the data sets
-
         LineData kospiData = new LineData(kospiDataSets);
         XAxis kospiXAxis= kospiChart.getXAxis();
         kospiXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
         kospiXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         kospiChart.setData(kospiData);
 
+
         kosdaqChart= (LineChart)rootView.findViewById(R.id.kosdaqChart);
-        ArrayList<Entry> kosdaqEntryMonth = stockData.getKosdaqEntryMonth();
+        ArrayList<Entry> kosdaqEntryMonth = StockData.getKosdaqEntryMonth();
         LineDataSet kosdaqSet1 = new LineDataSet(kosdaqEntryMonth, "DataSet 1");
         kosdaqSet1.setColor(Color.RED);
         kosdaqSet1.setDrawCircles(false);
         ArrayList<ILineDataSet> kosdaqDataSets = new ArrayList<>();
         kosdaqDataSets.add(kosdaqSet1); // add the data sets
-
         LineData kosdaqData = new LineData(kosdaqDataSets);
         XAxis kosdaqXAxis= kosdaqChart.getXAxis();
         kosdaqXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
@@ -110,7 +95,6 @@ public class MainHomeFragment extends Fragment {
         return rootView;
     }
 }
-
 
 class LineChartXAxisValueFormatter extends IndexAxisValueFormatter {
     @Override

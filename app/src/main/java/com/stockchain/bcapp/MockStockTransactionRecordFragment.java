@@ -92,9 +92,9 @@ class MockStockTransactionRecordAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position) {
         StockTransactionRecordInform item = items.get(position);
-        if(item.getRecordType() == "BUY"){
+        if(item.getRecordType().equals("BUY")){
             return 0;
-        }else if(item.getRecordType() == "SELL"){
+        }else if(item.getRecordType().equals("SELL")){
             return 1;
         }
         else{

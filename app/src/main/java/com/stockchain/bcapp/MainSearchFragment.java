@@ -32,14 +32,11 @@ public class    MainSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_search, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
-//        if(mainActivity.searchView.isIconified()){
-//            mainActivity.getSupportFragmentManager().popBackStackImmediate();
-//            return rootView;
-//        }
         ActionBar actionBar = mainActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
         bottomNavigationView.setVisibility(View.INVISIBLE);
+
 
         mainActivity.searchRecyclerView = rootView.findViewById(R.id.searchRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -71,9 +68,9 @@ class onQueryTextSearchView implements SearchView.OnQueryTextListener{
     MainActivity mainActivity;
     ArrayList<StockDataInform> stockDataList;
 
-    onQueryTextSearchView(MainActivity mainActivity, ArrayList<StockDataInform> stockDataList){
+    onQueryTextSearchView(MainActivity mainActivity){
         this.mainActivity = mainActivity;
-        this.stockDataList = stockDataList;
+        this.stockDataList = mainActivity.stockDataList;
     }
 
     @Override

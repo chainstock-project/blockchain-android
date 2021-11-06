@@ -44,11 +44,12 @@ public class MainStockInqueryFragment extends Fragment{
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
         bottomNavigationView.setVisibility(View.INVISIBLE);
 
-        Button buttonRed = (Button) rootView.findViewById(R.id.buttonStockTransaction) ;
-        buttonRed.setOnClickListener(new onClickButtonStockTransaction()) ;
+
+        Button buttonStockTransaction = (Button) rootView.findViewById(R.id.buttonStockTransaction) ;
+        buttonStockTransaction.setOnClickListener(new onClickButtonStockTransaction()) ;
 
         StockData stockData = new StockData(mainActivity.getApplicationContext());
-        StockDataDetailInform stockDataDetailInform = stockData.getStockDataDetail(mainActivity.inqueryStockDataInform, mainActivity.stockTransactionInformList);
+        StockDataDetailInform stockDataDetailInform = StockData.getStockDataDetail(mainActivity.inqueryStockDataInform, mainActivity.stockTransactionInformList);
         TextView textStockName = rootView.findViewById(R.id.textStockName);
         textStockName.setText(stockDataDetailInform.getName());
         TextView textMarketType = rootView.findViewById(R.id.textMarketType);

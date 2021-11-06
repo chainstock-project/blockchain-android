@@ -88,13 +88,36 @@ public class StockTransaction {
 
     static public StockTransactionInform searchStockTransactionInform(ArrayList<StockTransactionInform> list, String code){
         for(int i=0;i<list.size();i++){
-            if(list.get(i).code == code){
+            if(list.get(i).code.equals(code)){
                 return list.get(i);
             }
         }
         return null;
     }
 
+    static public int getNumberOfStock(ArrayList<StockTransactionInform> list, String code){
+        StockTransactionInform stockTransactionInform = searchStockTransactionInform(list, code);
+        if(stockTransactionInform == null) {
+            return 0;
+        }
+        else{
+            return stockTransactionInform.getCount();
+        }
+    }
+
+    public boolean checkStockTransactionCreated(String address, String code, int afteruNumberOfStock){
+        try {
+            ArrayList<StockTransactionInform> stockTransactionList = getStockTransactionList(address);
+            int numberOfStock = getNumberOfStock(stockTransactionList,code);
+            while(numberOfStock != afteruNumberOfStock){
+                stockTransactionList = getStockTransactionList(address);
+                numberOfStock = getNumberOfStock(stockTransactionList,code);
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
     private int getCurrentStockTransactionTotalAmount(ArrayList<StockTransactionInform> stockTransactionInformList) throws IOException{
         int amount = 0;

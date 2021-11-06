@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stockchain.cosmos.PreferenceManager;
+import com.stockchain.cosmos.StockBankInform;
 import com.stockchain.cosmos.StockData;
 import com.stockchain.cosmos.StockDataDetailInform;
 import com.stockchain.cosmos.StockDataInform;
@@ -27,9 +28,13 @@ interface OnBackPressedListener{
 
 public class MainActivity extends AppCompatActivity {
     Menu menu;
+    String username;
+    String address;
     StockDataInform inqueryStockDataInform;
     ArrayList<StockTransactionInform> stockTransactionInformList;
     ArrayList<StockDataInform> stockDataList;
+    StockBankInform stockBankInform;
+
     MainHomeFragment mainHomeFragment;
     MainFeedFragment mainFeedFragment;
     MainRankFragment mainRankFragment;
@@ -43,18 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView searchRecyclerView;
     SearchAdapter searchAdapter;
-
     RecyclerView mockRecyclerView;
     MockStockTransactionStatusAdapter mockStatusAdapter;
-
     RecyclerView mockRecordRecyclerView;
     MockStockTransactionRecordAdapter mockRecordAdapter;
-
     RecyclerView feedRecyclerView;
     FeedAdapter feedAdapter;
-
     RecyclerView rankRecyclerView;
     RankAdapter rankAdapter;
+
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
     }
@@ -73,19 +75,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         PreferenceManager pm = new PreferenceManager();
-        String address = pm.getString(getApplicationContext(), "address");
-        StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
+        username = pm.getString(getApplicationContext(), "username");
+        address = pm.getString(getApplicationContext(), "address");
+
         try {
+            StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
             stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
-        } catch (IOException e) {
-        }
-        StockData stockData = new StockData(getApplicationContext());
-        try {
+            stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
+            StockData stockData = new StockData(getApplicationContext());
             stockDataList = stockData.getStockDataList();
         } catch (IOException e) {
-            e.printStackTrace();
         }
-
         mainHomeFragment = new MainHomeFragment();
         mainFeedFragment = new MainFeedFragment();
         mainRankFragment = new MainRankFragment();
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("주식이름입력");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnSearchClickListener(new onClickSearchView());
-        searchView.setOnQueryTextListener(new onQueryTextSearchView(this, stockDataList));
+        searchView.setOnQueryTextListener(new onQueryTextSearchView(this));
 
         return true;
     }

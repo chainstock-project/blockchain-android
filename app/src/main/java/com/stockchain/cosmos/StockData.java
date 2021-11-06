@@ -116,14 +116,12 @@ public class StockData {
         return stockDataInform;
     }
 
-    public StockDataDetailInform getStockDataDetail(StockDataInform stockDataInform, ArrayList<StockTransactionInform> list){
+    static public StockDataDetailInform getStockDataDetail(StockDataInform stockDataInform, ArrayList<StockTransactionInform> list){
 
         class StockDataDetail extends Thread {
             StockDataDetailInform stockDataDetailInform = null;
             public void setStockDataDetail() {
                 try {
-                    StockTransaction stockTransaction = new StockTransaction(ctx);
-
                     String url = "https://finance.naver.com/item/main.nhn?code="+stockDataInform.code;
                     Document document = Jsoup.connect(url).get();
 
@@ -159,11 +157,20 @@ public class StockData {
                     String faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
                     String tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
 
-                    String PER = document.select("#_per").get(0).text();
-                    String EPS = document.select("#_eps").get(0).text();
-                    String PBR = document.select("#_pbr").get(0).text();
-                    String BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
-                    String sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text();
+                    String PER="N/A";
+                    String EPS="N/A";
+                    String PBR="N/A";
+                    String BPS="N/A";
+                    String sameInderstryPER = "N/A";
+                    try {
+                        PER = document.select("#_per").get(0).text();
+                        EPS = document.select("#_eps").get(0).text();
+                        PBR = document.select("#_pbr").get(0).text();
+                        BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
+                        sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text();
+                    }catch (Exception e){
+
+                    }
 
                     stockDataDetailInform = new StockDataDetailInform(date, stockCode, name, markType, dayOverDayAmount, dayOverDayRate, previousClosePrice, numberOfStock, marketSum, marketRanking, faceValue, tradingUnit, PER,EPS, PBR, BPS, sameInderstryPER);
                 } catch (IOException e) {
@@ -192,7 +199,7 @@ public class StockData {
         }
     }
 
-    public ArrayList<Entry> getStockPrice(String code) {
+    static public ArrayList<Entry> getStockPrice(String code) {
         ArrayList<Entry> stockPriceList = new ArrayList<>();
 
         class StockPrice extends Thread {
@@ -257,7 +264,7 @@ public class StockData {
         return searchedStockDataInformList;
     }
 
-    public ArrayList<Entry> getKospiEntryMonth() {
+    static public ArrayList<Entry> getKospiEntryMonth() {
         ArrayList<Entry> values = new ArrayList<>();
 
         class KospiPrice extends Thread {
@@ -319,7 +326,7 @@ public class StockData {
         }
     }
 
-    public ArrayList<Entry> getKosdaqEntryMonth() {
+    static public ArrayList<Entry> getKosdaqEntryMonth() {
         ArrayList<Entry> values = new ArrayList<>();
 
         class KosdaqPrice extends Thread {
