@@ -27,17 +27,9 @@ public class MockStockTransactionStatusFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_mock_stock_transaction_status, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
 
-
-
-
-
         //set asset
-        Context ctx = getActivity().getApplicationContext();
-        PreferenceManager pm = new PreferenceManager();
-
         TextView mockCurrentTotalAmount = rootView.findViewById(R.id.mockCurrentTotalAmount);
         mockCurrentTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentTotalAmount()));
-
         TextView mockTotalEarningRate = rootView.findViewById(R.id.mockTotalEarningRate);
         mockTotalEarningRate.setText(String.format("%.2f", mainActivity.stockBankInform.getEarningRate()));
         if(mainActivity.stockBankInform.getEarningRate()<0){
@@ -45,143 +37,109 @@ public class MockStockTransactionStatusFragment extends Fragment {
         }else{
             mockTotalEarningRate.setTextColor(Color.parseColor("#097df3"));
         }
-
         TextView mockBalances = rootView.findViewById(R.id.mockBalances);
         mockBalances.setText(String.valueOf(mainActivity.stockBankInform.getBalances()));
-
         TextView mockCurrentStockTotalAmount = rootView.findViewById(R.id.mockCurrentStockTotalAmount);
         mockCurrentStockTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentStockTotalAmount()));
 
 
-
-
-
-
-
-
-        mainActivity.mockRecyclerView = rootView.findViewById(R.id.mockRecycler);
+        //set holding stock
+        RecyclerView mockRecyclerView = rootView.findViewById(R.id.mockRecycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mainActivity.mockRecyclerView.setLayoutManager(layoutManager);
+        mockRecyclerView.setLayoutManager(layoutManager);
 
-        mainActivity.mockStatusAdapter = new MockStockTransactionStatusAdapter();
-        mainActivity.mockStatusAdapter.setOnItemClickListener(new MockItemClickListener(mainActivity));
-
-        ArrayList<StockTransactionInform> stockTransactionInformList = new ArrayList<>();
-        for(int i=0;i<mainActivity.stockTransactionInformList.size();i++){
-            stockTransactionInformList.add(mainActivity.stockTransactionInformList.get(i));
-        }
-        mainActivity.mockStatusAdapter.setItems(stockTransactionInformList);
-        mainActivity.mockRecyclerView.setAdapter(mainActivity.mockStatusAdapter);
-
-
-
-
-
-
-
+        MockStockTransactionStatusAdapter mockStockTransactionStatusAdapter = new MockStockTransactionStatusAdapter(mainActivity);
+        mockStockTransactionStatusAdapter.setItems(mainActivity.stockTransactionInformList);
+        mockRecyclerView.setAdapter(mockStockTransactionStatusAdapter);
 
         return rootView;
     }
-}
+
+    class MockStockTransactionStatusAdapter extends RecyclerView.Adapter<MockStockTransactionStatusAdapter.MockViewHolder>{
+        ArrayList<StockTransactionInform> items = new ArrayList<>();
+        MainActivity mainActivity;
+
+        public MockStockTransactionStatusAdapter(MainActivity mainActivity) {
+            this.mainActivity = mainActivity;
+        }
+
+        @NonNull
+        @Override
+        public MockViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+            View itemView = inflater.inflate(R.layout.holding_stock, viewGroup, false);
+            return new MockViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MockViewHolder holder, int position) {
+            StockTransactionInform item = items.get(position);
+            holder.setItem(item);
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
+        public void addItem(StockTransactionInform item){
+            items.add(item);
+        }
+
+        public  void setItems(ArrayList<StockTransactionInform> items){
+            this.items = items;
+        }
+
+        public void setItem(int position, StockTransactionInform item){
+            items.set(position, item);
+        }
+        public StockTransactionInform getItem(int position){
+            return items.get(position);
+        }
+
+        public class MockViewHolder extends RecyclerView.ViewHolder{
+            TextView holdingStockName;
+            TextView holdingStockEarningRate;
+            TextView holdingStockCount;
+            TextView holdingStockCurrentPrice;
+            TextView holdingStockPurchasePrice;
 
 
-class MockStockTransactionStatusAdapter extends RecyclerView.Adapter<MockStockTransactionStatusAdapter.MockViewHolder>{
-    ArrayList<StockTransactionInform> items = new ArrayList<>();
-    private OnItemClickListener mListener = null ;
+            public MockViewHolder(@NonNull View itemView) {
+                super(itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = getAdapterPosition() ;
+                        if (pos != RecyclerView.NO_POSITION) {
+                            StockTransactionInform item= getItem(pos);
+                            StockDataInform stockDataInform= new StockDataInform(item.getCode(), item.getName(), item.getMarketType(), (int) item.getCurrentAmount());
+                            mainActivity.inqueryStockDataInform = stockDataInform;
+                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
 
-    @NonNull
-    @Override
-    public MockViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View itemView = inflater.inflate(R.layout.holding_stock, viewGroup, false);
-        return new MockViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MockViewHolder holder, int position) {
-        StockTransactionInform item = items.get(position);
-        holder.setItem(item);
-    }
-
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
-
-    public void addItem(StockTransactionInform item){
-        items.add(item);
-    }
-
-    public  void setItems(ArrayList<StockTransactionInform> items){
-        this.items = items;
-    }
-
-    public void setItem(int position, StockTransactionInform item){
-        items.set(position, item);
-    }
-    public StockTransactionInform getItem(int position){
-        return items.get(position);
-    }
-    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mListener = listener ;
-    }
-
-    public class MockViewHolder extends RecyclerView.ViewHolder{
-        TextView holdingStockName;
-        TextView holdingStockEarningRate;
-        TextView holdingStockCount;
-        TextView holdingStockCurrentPrice;
-        TextView holdingStockPurchasePrice;
-
-
-        public MockViewHolder(@NonNull View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = getAdapterPosition() ;
-                    if (pos != RecyclerView.NO_POSITION) {
-                        mListener.onItemClick(view, pos);
-
+                        }
                     }
-                }
-            });
-            holdingStockName = itemView.findViewById(R.id.holdingStockName);
-            holdingStockEarningRate = itemView.findViewById(R.id.holdingStockEarningRate);
-            holdingStockCount = itemView.findViewById(R.id.holdingStockCount);
-            holdingStockCurrentPrice = itemView.findViewById(R.id.holdingStockCurrentPrice);
-            holdingStockPurchasePrice = itemView.findViewById(R.id.holdingStockPurchasePrice);
-        }
-
-        public void setItem(StockTransactionInform item){
-            holdingStockName.setText(item.getName());
-            holdingStockEarningRate.setText(String.valueOf(item.getEarningPrice()));
-            if(item.getEarningPrice()<0){
-                holdingStockEarningRate.setTextColor(Color.parseColor("#ed3738"));
-            }else{
-                holdingStockEarningRate.setTextColor(Color.parseColor("#097df3"));
+                });
+                holdingStockName = itemView.findViewById(R.id.holdingStockName);
+                holdingStockEarningRate = itemView.findViewById(R.id.holdingStockEarningRate);
+                holdingStockCount = itemView.findViewById(R.id.holdingStockCount);
+                holdingStockCurrentPrice = itemView.findViewById(R.id.holdingStockCurrentPrice);
+                holdingStockPurchasePrice = itemView.findViewById(R.id.holdingStockPurchasePrice);
             }
-            holdingStockCount.setText(String.valueOf(item.getCount()+"주"));
-            holdingStockCurrentPrice.setText(String.valueOf(item.getCurrentAmount()));
-            holdingStockPurchasePrice.setText(String.valueOf(item.getPurchaseAmount()));
 
+            public void setItem(StockTransactionInform item){
+                holdingStockName.setText(item.getName());
+                holdingStockEarningRate.setText(String.valueOf(item.getEarningPrice()));
+                if(item.getEarningPrice()<0){
+                    holdingStockEarningRate.setTextColor(Color.parseColor("#ed3738"));
+                }else{
+                    holdingStockEarningRate.setTextColor(Color.parseColor("#097df3"));
+                }
+                holdingStockCount.setText(String.valueOf(item.getCount()+"주"));
+                holdingStockCurrentPrice.setText(String.valueOf(item.getCurrentAmount()));
+                holdingStockPurchasePrice.setText(String.valueOf(item.getPurchaseAmount()));
+
+            }
         }
-    }
-}
-
-class MockItemClickListener implements OnItemClickListener {
-    MainActivity mainActivity;
-
-    public MockItemClickListener(MainActivity mainActivity) {
-        this.mainActivity= mainActivity;
-    }
-
-    @Override
-    public void onItemClick(View v, int position) {
-        StockTransactionInform item= mainActivity.mockStatusAdapter.getItem(position);
-        StockDataInform stockDataInform= new StockDataInform(item.getCode(), item.getName(), item.getMarketType(), (int) item.getCurrentAmount());
-        mainActivity.inqueryStockDataInform = stockDataInform;
-        mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
     }
 }

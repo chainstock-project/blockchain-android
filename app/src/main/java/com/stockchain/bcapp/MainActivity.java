@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.Account;
 import com.stockchain.cosmos.BlockChain;
 import com.stockchain.cosmos.Board;
 import com.stockchain.cosmos.BoardInform;
@@ -25,21 +26,10 @@ import com.stockchain.cosmos.StockTransactionRecordInform;
 import java.io.IOException;
 import java.util.ArrayList;
 
-interface OnBackPressedListener{
-    void onBackPressed();
-}
-
 public class MainActivity extends AppCompatActivity {
     Menu menu;
-    String username;
-    String address;
-    BlockChain bc;
-    StockDataInform inqueryStockDataInform;
-    BoardInform readBoardInform;
-    ArrayList<StockTransactionInform> stockTransactionInformList;
-    ArrayList<StockDataInform> stockDataList;
-    ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList;
-    StockBankInform stockBankInform;
+    SearchView searchView;
+    BottomNavigationView bottomNavigationView;
 
     MainHomeFragment mainHomeFragment;
     MainFeedFragment mainFeedFragment;
@@ -50,19 +40,20 @@ public class MainActivity extends AppCompatActivity {
     MainStockTransactionFragment mainStockTransactionFragment;
     BoardReadFragment boardReadFragment;
 
-    SearchView searchView;
-    BottomNavigationView bottomNavigationView;
+    BlockChain bc;
+    Account ac;
+    StockData sd;
+    StockTransaction st;
+    Board bd;
 
-    RecyclerView searchRecyclerView;
-    SearchAdapter searchAdapter;
-    RecyclerView mockRecyclerView;
-    MockStockTransactionStatusAdapter mockStatusAdapter;
-    RecyclerView mockRecordRecyclerView;
-    MockStockTransactionRecordAdapter mockRecordAdapter;
-    RecyclerView feedRecyclerView;
-    FeedAdapter feedAdapter;
-    RecyclerView boardRecyclerView;
-    BoardAdapter boardAdapter;
+    String username;
+    String address;
+    StockBankInform stockBankInform;
+    ArrayList<StockDataInform> stockDataList;
+    ArrayList<StockTransactionInform> stockTransactionInformList;
+    ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList;
+    BoardInform readBoardInform;
+    StockDataInform inqueryStockDataInform;
 
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
@@ -80,45 +71,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        PreferenceManager pm = new PreferenceManager();
-        username = pm.getString(getApplicationContext(), "username");
-        address = pm.getString(getApplicationContext(), "address");
-
-        try {
-            StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
-            stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
-            stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(address);
-            stockTransaction.addStockTransactionRecordDate(stockTransactionRecordInformList);
-            stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);;
-            bc = new BlockChain(getApplicationContext(), getString(R.string.server_ip));
-
-//            Board board = new Board(getApplicationContext());
-//            try {
-//                String tx = board.createBoard(username, "test title", "test body");
-//                boolean check = bc.checkTxCommitted(tx);
-//                boolean check2 = bc.checkTxCommitted(tx);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-
-            StockData stockData = new StockData(getApplicationContext());
-            stockDataList = stockData.getStockDataList();
-        } catch (IOException e) {
-        }
-        mainHomeFragment = new MainHomeFragment();
-        mainFeedFragment = new MainFeedFragment();
-        mainBoardFragment = new MainBoardFragment();
-        mainSettingFragment = new MainSettingFragment();
-        mainSearchFragment = new MainSearchFragment();
-        mainStockInqueryFragment = new MainStockInqueryFragment();
-        mainStockTransactionFragment = new MainStockTransactionFragment();
-        boardReadFragment = new BoardReadFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
-
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -145,6 +97,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mainHomeFragment = new MainHomeFragment();
+        mainFeedFragment = new MainFeedFragment();
+        mainBoardFragment = new MainBoardFragment();
+        mainSettingFragment = new MainSettingFragment();
+        mainSearchFragment = new MainSearchFragment();
+        mainStockInqueryFragment = new MainStockInqueryFragment();
+        mainStockTransactionFragment = new MainStockTransactionFragment();
+        boardReadFragment = new BoardReadFragment();
+
+        bc = new BlockChain(getApplicationContext(), getString(R.string.server_ip));
+        ac = new Account(getApplicationContext());
+        sd = new StockData(getApplicationContext());
+        st = new StockTransaction(getApplicationContext());
+        bd = new Board(getApplicationContext());
+
+        PreferenceManager pm = new PreferenceManager();
+        username = pm.getString(getApplicationContext(), "username");
+        address = pm.getString(getApplicationContext(), "address");
+
+        try {
+            stockDataList = sd.getStockDataList();
+            stockTransactionInformList = st.getStockTransactionInformList(address);
+            stockBankInform = st.getStockBankInform(stockTransactionInformList, address);;
+            stockTransactionRecordInformList = st.getStockTransactionRecord(address);
+            st.addStockTransactionRecordDate(stockTransactionRecordInformList);
+
+//            Board board = new Board(getApplicationContext());
+//            try {
+//                String tx = board.createBoard(username, "test title", "test body");
+//                boolean check = bc.checkTxCommitted(tx);
+//                boolean check2 = bc.checkTxCommitted(tx);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        } catch (IOException e) {
+            this.finishAffinity();
+            System.exit(0);
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -154,23 +147,20 @@ public class MainActivity extends AppCompatActivity {
         searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
         searchView.setQueryHint("주식이름입력");
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnSearchClickListener(new onClickSearchView());
-        searchView.setOnQueryTextListener(new onQueryTextSearchView(this));
-
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSearchFragment).addToBackStack(null).commit();
+            }
+        });
         return true;
-    }
-
-    class onClickSearchView implements View.OnClickListener{
-        @Override
-        public void onClick(View view) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSearchFragment).addToBackStack(null).commit();
-        }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int curId = item.getItemId();
         switch (curId){
+            //back key
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -189,8 +179,4 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-}
-
-interface OnItemClickListener {
-    void onItemClick(View v, int position) ;
 }

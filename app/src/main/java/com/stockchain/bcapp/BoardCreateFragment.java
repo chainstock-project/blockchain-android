@@ -55,18 +55,18 @@ public class BoardCreateFragment extends Fragment {
     class onClickBoardCreateButton implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
-            MainActivity mainActivity = (MainActivity)getActivity();
-            EditText boardTitleInput = rootView.findViewById(R.id.boardTitleInput);
-            EditText boardBodyInput = rootView.findViewById(R.id.boardBodyInput);
-
-            Board board = new Board(mainActivity.getApplicationContext());
             try {
-                board.createBoard(mainActivity.username, boardTitleInput.getText().toString(), boardBodyInput.getText().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                MainActivity mainActivity = (MainActivity)getActivity();
+                EditText boardTitleInput = rootView.findViewById(R.id.boardTitleInput);
+                EditText boardBodyInput = rootView.findViewById(R.id.boardBodyInput);
 
-            mainActivity.getSupportFragmentManager().popBackStack();
+                String txHash = mainActivity.bd.createBoard(mainActivity.username, boardTitleInput.getText().toString(), boardBodyInput.getText().toString());
+                while(!mainActivity.bc.checkTxCommitted(txHash));
+
+                mainActivity.getSupportFragmentManager().popBackStack();
+            } catch (IOException e) {
+                Tools.showDialog(rootView.getContext(), "게시", "게시판생성실패!!");
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class    MainSearchFragment extends Fragment {
+    RecyclerView searchRecyclerView;
+    SearchAdapter searchAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,12 +39,13 @@ public class    MainSearchFragment extends Fragment {
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
         bottomNavigationView.setVisibility(View.INVISIBLE);
 
+        mainActivity.searchView.setOnQueryTextListener(new onQueryTextSearchView(mainActivity));
 
-        mainActivity.searchRecyclerView = rootView.findViewById(R.id.searchRecyclerView);
+        searchRecyclerView = rootView.findViewById(R.id.searchRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mainActivity.searchRecyclerView.setLayoutManager(layoutManager);
-        mainActivity.searchAdapter = new SearchAdapter();
-        mainActivity.searchAdapter.setOnItemClickListener(new SearchVeiwItemClickListener(mainActivity));
+        searchRecyclerView.setLayoutManager(layoutManager);
+        searchAdapter = new SearchAdapter(mainActivity);
+        searchRecyclerView.setAdapter(searchAdapter);
         return rootView;
     }
 
@@ -62,119 +65,105 @@ public class    MainSearchFragment extends Fragment {
             bottomNavigationView.setVisibility(View.VISIBLE);
         }
     }
-}
 
-class onQueryTextSearchView implements SearchView.OnQueryTextListener{
-    MainActivity mainActivity;
+    class onQueryTextSearchView implements SearchView.OnQueryTextListener{
+        MainActivity mainActivity;
 
-    onQueryTextSearchView(MainActivity mainActivity){
-        this.mainActivity = mainActivity;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if(mainActivity.searchAdapter.getItemCount()>0){
-            mainActivity.inqueryStockDataInform = mainActivity.searchAdapter.getItem(0);
-            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
+        onQueryTextSearchView(MainActivity mainActivity){
+            this.mainActivity = mainActivity;
         }
-        return true;
-    }
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        try {
-            ArrayList<StockDataInform> stockDataInforms = StockData.searchStock(mainActivity.stockDataList, newText);
-            mainActivity.searchAdapter.setItems(stockDataInforms);
-            mainActivity.searchRecyclerView.setAdapter(mainActivity.searchAdapter);
-            return true;
-        }catch (NullPointerException e){
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            if(searchAdapter.getItemCount()>0){
+                mainActivity.inqueryStockDataInform = searchAdapter.getItem(0);
+                mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
+            }
             return true;
         }
-    }
-}
-
-class SearchVeiwItemClickListener implements OnItemClickListener {
-    MainActivity mainActivity;
-
-    public SearchVeiwItemClickListener(MainActivity mainActivity) {
-        this.mainActivity= mainActivity;
-    }
-
-    @Override
-    public void onItemClick(View v, int position) {
-        mainActivity.inqueryStockDataInform = mainActivity.searchAdapter.getItem(position);
-        mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
-    }
-}
-
-
-class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
-    ArrayList<StockDataInform> items = new ArrayList<>();
-    private OnItemClickListener mListener = null ;
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View itemView = inflater.inflate(R.layout.stock_data_inform, viewGroup, false);
-        return new ViewHolder(itemView);
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            try {
+                ArrayList<StockDataInform> stockDataInforms = StockData.searchStock(mainActivity.stockDataList, newText);
+                searchAdapter.setItems(stockDataInforms);
+                searchRecyclerView.setAdapter(searchAdapter);
+                return true;
+            }catch (NullPointerException e){
+                return true;
+            }
+        }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        StockDataInform item = items.get(position);
-        holder.setItem(item);
-    }
+    class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
+        ArrayList<StockDataInform> items = new ArrayList<>();
+        MainActivity mainActivity;
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
+        public SearchAdapter(MainActivity mainActivity) {
+            this.mainActivity = mainActivity;
+        }
 
-    public void addItem(StockDataInform item){
-        items.add(item);
-    }
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+            View itemView = inflater.inflate(R.layout.stock_data_inform, viewGroup, false);
+            return new ViewHolder(itemView);
+        }
 
-    public  void setItems(ArrayList<StockDataInform> items){
-        this.items = items;
-    }
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            StockDataInform item = items.get(position);
+            holder.setItem(item);
+        }
 
-    public void setItem(int position, StockDataInform item){
-        items.set(position, item);
-    }
-    public StockDataInform getItem(int position){
-        return items.get(position);
-    }
-    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mListener = listener ;
-    }
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView stockDataCodeView;
-        TextView stockDataNameView;
-        TextView stockDataMarketTypeView;
+        public void addItem(StockDataInform item){
+            items.add(item);
+        }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = getAdapterPosition() ;
-                    if (pos != RecyclerView.NO_POSITION) {
-                        mListener.onItemClick(view, pos);
+        public  void setItems(ArrayList<StockDataInform> items){
+            this.items = items;
+        }
 
+        public void setItem(int position, StockDataInform item){
+            items.set(position, item);
+        }
+        public StockDataInform getItem(int position){
+            return items.get(position);
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder{
+            TextView stockDataCodeView;
+            TextView stockDataNameView;
+            TextView stockDataMarketTypeView;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = getAdapterPosition() ;
+                        if (pos != RecyclerView.NO_POSITION) {
+                            mainActivity.inqueryStockDataInform = getItem(pos);
+                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockInqueryFragment).addToBackStack(null).commit();
+
+                        }
                     }
-                }
-            });
-            stockDataCodeView = itemView.findViewById(R.id.stockDataCode);
-            stockDataNameView = itemView.findViewById(R.id.stockDataName);
-            stockDataMarketTypeView = itemView.findViewById(R.id.stockDataMarketType);
-        }
+                });
+                stockDataCodeView = itemView.findViewById(R.id.stockDataCode);
+                stockDataNameView = itemView.findViewById(R.id.stockDataName);
+                stockDataMarketTypeView = itemView.findViewById(R.id.stockDataMarketType);
+            }
 
-        public void setItem(StockDataInform item){
-            stockDataCodeView.setText(item.getCode());
-            stockDataNameView.setText(item.getName());
-            stockDataMarketTypeView.setText(item.getMarket_type());
+            public void setItem(StockDataInform item){
+                stockDataCodeView.setText(item.getCode());
+                stockDataNameView.setText(item.getName());
+                stockDataMarketTypeView.setText(item.getMarket_type());
+            }
         }
     }
 }

@@ -34,38 +34,46 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView usernameView = findViewById(R.id.signinName);
-                String username = usernameView.getText().toString();
                 TextView mnemonicView = findViewById(R.id.mnemonic);
+                String username = usernameView.getText().toString();
                 String mnemonic = mnemonicView.getText().toString();
 
                 // --LOGIN--
                 Account ac = new Account(getApplicationContext(), getString(R.string.server_ip));
 //                ac.createWalletByMnemonicLocal(username, mnemonic);
-                if (ac.isUsernameExistsBlockchain(username)) {
-                    if(!ac.isUsernameExistsLocal(username)){
-                        if(!ac.createWalletByMnemonicLocal(username, mnemonic)){
-                            Tools.showDialog(LoginActivity.this, "로그인", "로그인 실패: 유효한 mnemonic이 아닙니다.");
-                            return;
+                if (ac.checkAccountRegistered(username)) {
+                    if(ac.checkAccountCreated(username)){
+                        ac.deleteAccount(username);
+                    }
+
+                    if(ac.createAccountByMnemonic(username, mnemonic)){
+                        if (ac.checkCreatedAccountEqualRegisteredAccountByUsername(username)){
+                            try {
+                                String address = ac.getAddressByUsernameLocal(username);
+                                PreferenceManager pm = new PreferenceManager();
+                                pm.setString(getApplicationContext(), "username", username);
+                                pm.setString(getApplicationContext(), "address", address);
+                            } catch (IOException e) {
+                                finishAffinity();
+                                System.exit(0);
+                            }
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
+                        else{
+                            Tools.showDialog(LoginActivity.this, "로그인", "해당 계정을 등록할때 사용된 mnemonic이 아닙니다.");
+                            ac.deleteAccount(username);
+                        }
+                    }else{
+                        Tools.showDialog(LoginActivity.this, "로그인", "유효한 mnemonic이 아닙니다.");
+                        return;
                     }
-                    if (ac.checkLogin(username)){
-                        PreferenceManager pm = new PreferenceManager();
-                        pm.setString(getApplicationContext(), "username", username);
-                        String address = ac.getAddressByUsernameLocal(username);
-                        pm.setString(getApplicationContext(), "address", address);
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else{
-                        Tools.showDialog(LoginActivity.this, "로그인", "local지갑과 stockchain에 등록된 지갑이 일치하지 않습니다.");
-                        ac.deleteWalletLocal(username);
-                    }
+
                 } else {
-                    Tools.showDialog(LoginActivity.this, "로그인", "존재하지않는 Name입니다.");
+                    Tools.showDialog(LoginActivity.this, "로그인", "등록되지않은 Name입니다.");
                 }
             }
         });
-
     }
 }

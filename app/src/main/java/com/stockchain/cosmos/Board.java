@@ -20,7 +20,7 @@ public class Board {
 
     }
 
-    public int getBoardCount() throws IOException {
+    private int getBoardCount() throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-board", "--limit", "1", "--count-total", "--home", homeDir);
         Process process = builder.start();
 
@@ -45,7 +45,7 @@ public class Board {
         }
     }
 
-    public int getBoardPageCount(int count) throws IOException {
+    private int getBoardPageCount(int count) throws IOException {
         int pageCount = count/15;
         if (count % 15 > 0) {
             pageCount++;
@@ -72,15 +72,6 @@ public class Board {
             ArrayList<AccountInform> userList = ac.getUserList();
             while ((line = stdOut.readLine()) != null) {
                  if(line.equals("pagination:")){
-//                    stdOut.readLine();
-//                    line = stdOut.readLine();
-//                    String[] line_split = line.split(" ");
-//                    int new_count = (int) Double.parseDouble(line_split[line_split.length - 1].replace("\"",""));
-//
-//                    if (new_count != count){
-//                        throw new IOExceptio
-//                        n("count diffrent");
-//                    }                ;
                     break;
                 }
 
@@ -106,25 +97,6 @@ public class Board {
 
             Collections.reverse(boardInformList);
             return boardInformList;
-        }
-    }
-
-    public String createBoard (String username, String title, String body) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-board", title, body, "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
-        Process process = builder.start();
-        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//        (new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine();
-        String line = stdOut.readLine();
-        if (line == null) {
-            throw new IOException((new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine());
-        }
-        else{
-            String tx="";
-            while(line != null){
-                tx = line;
-                line = stdOut.readLine();
-            }
-            return tx.substring(8);
         }
     }
 
@@ -160,23 +132,56 @@ public class Board {
         }
     }
 
-    public void updateBoard(String username, int id, String title, String body) throws IOException {
+    public String createBoard (String username, String title, String body) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-board", title, body, "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
+        Process process = builder.start();
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//        (new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine();
+        String line = stdOut.readLine();
+        if (line == null) {
+            throw new IOException((new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine());
+        }
+        else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
+        }
+    }
+
+    public String updateBoard(String username, int id, String title, String body) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "update-board", String.valueOf(id), title, body, "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
+        }else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
         }
     }
 
-    public void deleteBoard(String username, int id)throws IOException{
+    public String deleteBoard(String username, int id)throws IOException{
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "delete-board", String.valueOf(id), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
+        }else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
         }
     }
 

@@ -22,20 +22,21 @@
                 android:id="@+id/recordBuyName"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:singleLine="false"
                 android:text="삼성전자"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/recordBuyPrice"
-                android:layout_width="140dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                android:text="100원"
+                android:text="100st"
                 android:textAlignment="viewEnd"
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"

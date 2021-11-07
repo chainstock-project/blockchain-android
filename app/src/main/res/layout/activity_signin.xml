@@ -51,11 +51,13 @@
         android:id="@+id/signinButton"
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
         android:text="회원가입"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/signinLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/goLoginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.LineChartXAxisValueDateFormatter;
 import com.stockchain.cosmos.StockData;
 import com.stockchain.cosmos.StockDataDetailInform;
 
@@ -95,14 +96,15 @@ public class MainStockInqueryFragment extends Fragment{
 
         stockChart = (LineChart)rootView.findViewById(R.id.stockChart);
         ArrayList<Entry> stockPrice = stockData.getStockPrice(mainActivity.inqueryStockDataInform.getCode());
-        LineDataSet stockSet1 = new LineDataSet(stockPrice, "kospi price 1");
+        LineDataSet stockSet1 = new LineDataSet(stockPrice, "price");
         stockSet1.setColor(Color.RED);
         stockSet1.setDrawCircles(false);
+        stockSet1.setDrawValues(false);
         ArrayList<ILineDataSet> stockDataSet = new ArrayList<>();
         stockDataSet.add(stockSet1); // add the data sets
         LineData stockDataLine = new LineData(stockDataSet);
         XAxis stockXAxis= stockChart.getXAxis();
-        stockXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
+        stockXAxis.setValueFormatter(new LineChartXAxisValueDateFormatter());
         stockXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         stockChart.setData(stockDataLine);
 

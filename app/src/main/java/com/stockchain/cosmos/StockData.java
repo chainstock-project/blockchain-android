@@ -148,35 +148,35 @@ public class StockData {
                     String numberOfStock;
                     StockTransactionInform stockTransactionInform = StockTransaction.searchStockTransactionInform(list, stockCode);
                     if(stockTransactionInform == null) {
-                        numberOfStock = "0";
+                        numberOfStock = "0주";
                     }
                     else{
-                         numberOfStock = String.valueOf(stockTransactionInform.getCount());
+                         numberOfStock = String.valueOf(stockTransactionInform.getCount())+"주";
                     }
 
                     String marketSum = "N/A";
                     try{
-                        marketSum = document.select("#_market_sum").get(0).text();
+                        marketSum = document.select("#_market_sum").get(0).text()+"억";
                     }catch (Exception e){}
                     String marketRanking = "N/A";
                     try{
-                        marketRanking = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(2) > td > em").get(0).text();
+                        marketRanking = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(2) > td > em").get(0).text()+"위";
                     }catch (Exception e){}
                     String faceValue = "N/A";
                     try{
-                        faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
+                        faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text()+"";
                     }catch (Exception e){
                         marketRanking = "N/A";
                     }
                     String tradingUnit = "N/A";
                     try{
-                        tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
+                        tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text()+"주";
                     }catch (Exception e){}
 
 
                     String PER="N/A";
                     try{
-                        PER = document.select("#_per").get(0).text();
+                        PER = document.select("#_per").get(0).text()+"배";
                     }catch (Exception e){}
                     String EPS="N/A";
                     try{
@@ -184,7 +184,7 @@ public class StockData {
                     }catch (Exception e){}
                     String PBR="N/A";
                     try{
-                        PBR = document.select("#_pbr").get(0).text();
+                        PBR = document.select("#_pbr").get(0).text()+"배";
                     }catch (Exception e){}
                     String BPS="N/A";
                     try{
@@ -192,7 +192,7 @@ public class StockData {
                     }catch (Exception e){}
                     String sameInderstryPER = "N/A";
                     try {
-                        sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text();
+                        sameInderstryPER = document.select("#tab_con1 > div:nth-child(6) > table > tbody > tr.strong > td > em").get(0).text()+"배";
                     }catch (Exception e){}
 
                     stockDataDetailInform = new StockDataDetailInform(date, stockCode, name, markType, dayOverDayAmount, dayOverDayRate, previousClosePrice, numberOfStock, marketSum, marketRanking, faceValue, tradingUnit, PER,EPS, PBR, BPS, sameInderstryPER);

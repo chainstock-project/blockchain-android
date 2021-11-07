@@ -59,7 +59,7 @@ public class Account {
         return walletInformList;
     }
 
-    public String createWalletLocal(String username) throws IOException {
+    public String createAccount(String username) throws IOException {
         Log.d("go", "create wallet");
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "add", username, "--keyring-backend", "test", "--home", homeDir);
 
@@ -77,7 +77,48 @@ public class Account {
         return mnemonic;
     }
 
-    public void deleteWalletLocal(String username) {
+
+    public boolean createAccountByMnemonic(String username, String mnemonic) {
+        try {
+            String cmd = "echo \"" + mnemonic + "\" | " + this.blockchainPath + " keys add " + username + " --recover --keyring-backend test --home " + homeDir;
+            ProcessBuilder builder = new ProcessBuilder("/system/bin/sh", "-c", cmd);
+            Process process = builder.start();
+
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = stdOut.readLine();
+            if (line != null) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    public String getAddressByUsernameLocal(String username) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "-a", "--keyring-backend", "test", "--home", homeDir);
+        Process process = builder.start();
+
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = stdOut.readLine();
+        if(line==null){
+            throw new IOException("local account not exists");
+        }else {
+            return line;
+        }
+    }
+
+    public boolean checkAccountCreated(String username){
+        try {
+            getAddressByUsernameLocal(username);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public void deleteAccount(String username) {
         try {
             ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "delete", username, "-y", "--keyring-backend", "test", "--home", homeDir);
             Process process = builder.start();
@@ -89,7 +130,7 @@ public class Account {
         }
     }
 
-    public boolean walletRegisterBlockchain(String username, String address) {
+    public boolean accountRegister(String username, String address) {
         class AccountRegister extends Thread {
             private boolean status;
             private String serverIp;
@@ -143,89 +184,28 @@ public class Account {
         }
     }
 
-    public boolean createWalletByMnemonicLocal(String username, String mnemonic) {
-        try {
-            String cmd = "echo \"" + mnemonic + "\" | " + this.blockchainPath + " keys add " + username + " --recover --keyring-backend test --home " + homeDir;
-            ProcessBuilder builder = new ProcessBuilder("/system/bin/sh", "-c", cmd);
-            Process process = builder.start();
-
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if (line != null) {
-                return true;
-            }
-            else{
-                return false;
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean isUsernameExistsLocal(String username){
-        try {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "--keyring-backend", "test", "--home", homeDir);
-            Process process = builder.start();
-
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if (line == null) {
-                return false;
-            } else {
-                return true;
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean isUsernameExistsBlockchain(String username){
-        try {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-user", username, "--home", homeDir);
-            Process process = builder.start();
-
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if (line == null) {
-                return false;
-            } else {
-                return true;
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public String getAddressByUsernameLocal(String username){
-        try {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "keys", "show", username, "-a", "--keyring-backend", "test", "--home", homeDir);
-            Process process = builder.start();
-
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if(line==null){
-                throw new IOException("local account not exists");
-            }
-            return line;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public String getAddressByUsernameBlockChain(String username) throws IOException {
-            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-user", username, "--home", homeDir);
-            Process process = builder.start();
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-user", username, "--home", homeDir);
+        Process process = builder.start();
 
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = stdOut.readLine();
-            if (line == null) {
-                throw new IOException("not exists");
-            } else {
-                String[] lineSplit = stdOut.readLine().split(" ");
-                String address = lineSplit[lineSplit.length-1];
-                return address;
-            }
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = stdOut.readLine();
+        if (line == null) {
+            throw new IOException("not exists");
+        } else {
+            String[] lineSplit = stdOut.readLine().split(" ");
+            String address = lineSplit[lineSplit.length-1];
+            return address;
+        }
+    }
+
+    public boolean checkAccountRegistered(String username){
+        try {
+            getAddressByUsernameBlockChain(username);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public ArrayList<AccountInform> getUserList(){
@@ -269,7 +249,7 @@ public class Account {
     }
 
 
-    public boolean checkLogin(String username){
+    public boolean checkCreatedAccountEqualRegisteredAccountByUsername(String username){
         try {
             String localAddress = getAddressByUsernameLocal(username);
             String blockchainAddress = getAddressByUsernameBlockChain(username);

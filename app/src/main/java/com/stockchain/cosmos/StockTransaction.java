@@ -19,23 +19,38 @@ public class StockTransaction {
         this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
     }
 
-    public void createStockTransaction(String username, String code, int count) throws IOException {
+    public String createStockTransaction(String username, String code, int count) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
+        }else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
         }
     }
 
-    public void deleteStockTransaction(String username, String code, int count)throws IOException{
+    public String deleteStockTransaction(String username, String code, int count)throws IOException{
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "delete-stock-transaction", code, String.valueOf(count), "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
+        }
+        else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
         }
     }
 

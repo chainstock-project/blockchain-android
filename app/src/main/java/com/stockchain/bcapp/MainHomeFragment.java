@@ -18,6 +18,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.stockchain.cosmos.LineChartXAxisValueDateFormatter;
 import com.stockchain.cosmos.PreferenceManager;
 import com.stockchain.cosmos.StockBankInform;
 import com.stockchain.cosmos.StockData;
@@ -44,11 +45,7 @@ public class MainHomeFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_home, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
 
-
         //set asset
-        Context ctx = getActivity().getApplicationContext();
-        PreferenceManager pm = new PreferenceManager();
-
         TextView assetCurrentTotalAmount = rootView.findViewById(R.id.assetCurrentTotalAmount);
         assetCurrentTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentTotalAmount()));
         TextView assetTotalEarningPrice = rootView.findViewById(R.id.assetTotalEarningPrice);
@@ -63,7 +60,7 @@ public class MainHomeFragment extends Fragment {
         TextView assetCurrentStockTotalAmount = rootView.findViewById(R.id.assetCurrentStockTotalAmount);
         assetCurrentStockTotalAmount.setText(String.valueOf(mainActivity.stockBankInform.getCurrentStockTotalAmount()));
 
-        //set graph
+        //set kospi graph
         kospiChart= (LineChart)rootView.findViewById(R.id.kospiChart);
         ArrayList<Entry> kospiEntryMonth = StockData.getKospiEntryMonth();
         LineDataSet kospiSet1 = new LineDataSet(kospiEntryMonth, "price");
@@ -75,10 +72,11 @@ public class MainHomeFragment extends Fragment {
         kospiDataSets.add(kospiSet1); // add the data sets
         LineData kospiData = new LineData(kospiDataSets);
         XAxis kospiXAxis= kospiChart.getXAxis();
-        kospiXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
+        kospiXAxis.setValueFormatter(new LineChartXAxisValueDateFormatter());
         kospiXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         kospiChart.setData(kospiData);
 
+        //set kosdaq graph
         kosdaqChart= (LineChart)rootView.findViewById(R.id.kosdaqChart);
         ArrayList<Entry> kosdaqEntryMonth = StockData.getKosdaqEntryMonth();
         LineDataSet kosdaqSet1 = new LineDataSet(kosdaqEntryMonth, "price");
@@ -89,21 +87,11 @@ public class MainHomeFragment extends Fragment {
         kosdaqDataSets.add(kosdaqSet1); // add the data sets
         LineData kosdaqData = new LineData(kosdaqDataSets);
         XAxis kosdaqXAxis= kosdaqChart.getXAxis();
-        kosdaqXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
+        kosdaqXAxis.setValueFormatter(new LineChartXAxisValueDateFormatter());
         kosdaqXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         kosdaqChart.setData(kosdaqData);
 
 
         return rootView;
-    }
-}
-
-class LineChartXAxisValueFormatter extends IndexAxisValueFormatter {
-    @Override
-    public String getFormattedValue(float value) {
-        Date date = new Date();
-        date.setTime((long) value*1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
-        return sdf.format(date);
     }
 }

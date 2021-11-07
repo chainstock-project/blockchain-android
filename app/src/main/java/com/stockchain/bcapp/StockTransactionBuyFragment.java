@@ -113,22 +113,14 @@ public class StockTransactionBuyFragment extends Fragment {
                 int buyCount = Integer.parseInt(buyCountInput.getText().toString());
                 String code = mainActivity.inqueryStockDataInform.getCode();
 
-                StockTransaction stockTransaction = new StockTransaction(mainActivity.getApplicationContext());
-                stockTransaction.createStockTransaction(mainActivity.username, code, buyCount);
+                String txhash = mainActivity.st.createStockTransaction(mainActivity.username, code, buyCount);
+                while(!mainActivity.bc.checkTxCommitted(txhash));
 
-                int beforeNumberOfStock = StockTransaction.getNumberOfStock(mainActivity.stockTransactionInformList, mainActivity.inqueryStockDataInform.getCode());
-                int afterNumberOfStock = beforeNumberOfStock + buyCount;
-
-                if(stockTransaction.checkStockTransactionCreated(mainActivity.address, code, afterNumberOfStock)){
-                    mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
-                    mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
-                    stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
-                    mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
-                    getParentFragmentManager().popBackStack();
-                }
-                else{
-                    Tools.showDialog(rootView.getContext(), "매수", "매수실퍠!");
-                }
+                mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
+                mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
+                mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
+                stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
+                getParentFragmentManager().popBackStack();
             } catch (IOException e) {
                 Tools.showDialog(rootView.getContext(), "매수", "매수실퍠!");
             }

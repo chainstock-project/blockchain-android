@@ -18,22 +18,15 @@ public class MainMockFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_mock, container, false);
+
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabMock);
         ViewPager pager= rootView.findViewById(R.id.mockContainer);
-
         MockPageAdapter mockPageAdapter = new MockPageAdapter(getChildFragmentManager());
+        tabLayout.setupWithViewPager(pager); //텝레이아웃과 뷰페이저를 연결
         mockPageAdapter.addItem(new MockStockTransactionStatusFragment());
         mockPageAdapter.addItem(new MockStockTransactionRecordFragment());
         pager.setAdapter(mockPageAdapter);
-
-        tabLayout.setupWithViewPager(pager); //텝레이아웃과 뷰페이저를 연결
         return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
     }
 
     class MockPageAdapter extends FragmentStatePagerAdapter {

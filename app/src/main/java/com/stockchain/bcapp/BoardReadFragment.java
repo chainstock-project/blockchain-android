@@ -36,7 +36,6 @@ public class BoardReadFragment extends Fragment {
         TextView boardReadBody = rootView.findViewById(R.id.boardReadBody);
         boardReadBody.setText(mainActivity.readBoardInform.getBody());
 
-
         Button buttonBoardDelete = rootView.findViewById(R.id.buttonBoardDelete);
         buttonBoardDelete.setOnClickListener(new onClickBoardDeleteButton());
 
@@ -67,14 +66,17 @@ public class BoardReadFragment extends Fragment {
     class onClickBoardDeleteButton implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
-            MainActivity mainActivity = (MainActivity)getActivity();
-            Board board = new Board(mainActivity.getApplicationContext());
             try {
-                board.deleteBoard(mainActivity.username, mainActivity.readBoardInform.getId());
+                MainActivity mainActivity = (MainActivity)getActivity();
+                Board board = new Board(mainActivity.getApplicationContext());
+
+                String txHash = board.deleteBoard(mainActivity.username, mainActivity.readBoardInform.getId());
+                while(!mainActivity.bc.checkTxCommitted(txHash));
+
+                mainActivity.getSupportFragmentManager().popBackStack();
             } catch (IOException e) {
-                e.printStackTrace();
+                Tools.showDialog(rootView.getContext(), "게시", "삭제실패!!");
             }
-            mainActivity.getSupportFragmentManager().popBackStack();
         }
     }
 

@@ -105,28 +105,21 @@ public class StockTransactionSellFragment extends Fragment {
 
     class onClickButtonSell implements Button.OnClickListener {
         @Override
-        public void onClick(View view) {
+        public void onClick(cView view) {
             try {
                 EditText sellCountInput = rootView.findViewById(R.id.sellCountInput);
                 int sellCount = Integer.parseInt(sellCountInput.getText().toString());
                 String code = mainActivity.inqueryStockDataInform.getCode();
 
-                StockTransaction stockTransaction = new StockTransaction(mainActivity.getApplicationContext());
-                stockTransaction.deleteStockTransaction(mainActivity.username, code, sellCount);
+                String txHash = mainActivity.st.deleteStockTransaction(mainActivity.username, code, sellCount);
+                while(!mainActivity.bc.checkTxCommitted(txHash));
 
-                int beforeNumberOfStock = StockTransaction.getNumberOfStock(mainActivity.stockTransactionInformList, mainActivity.inqueryStockDataInform.getCode());
-                int afterNumberOfStock = beforeNumberOfStock - sellCount;
-
-                if (stockTransaction.checkStockTransactionCreated(mainActivity.address, code, afterNumberOfStock)) {
-                    mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
-                    mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
-                    stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
-                    mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
-                    getParentFragmentManager().popBackStack();
-                    getParentFragmentManager().popBackStack();
-                } else {
-                    Tools.showDialog(rootView.getContext(), "매도", "매도실패!");
-                }
+                mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
+                mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
+                stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
+                mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().popBackStack();
             } catch (IOException e) {
                 Tools.showDialog(rootView.getContext(), "매도", "매도실패!");
             }
