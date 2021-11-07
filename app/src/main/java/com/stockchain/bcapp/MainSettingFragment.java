@@ -1,5 +1,7 @@
 package com.stockchain.bcapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.stockchain.cosmos.PreferenceManager;
 
 public class MainSettingFragment extends Fragment {
     @Override
@@ -24,7 +28,15 @@ public class MainSettingFragment extends Fragment {
         @Override
         public void onClick(View view) {
             MainActivity mainActivity = (MainActivity)getActivity();
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            Context ctx = mainActivity.getApplicationContext();
+            PreferenceManager pm = new PreferenceManager();
+            pm.removeKey(ctx, "username");
+            pm.removeKey(ctx, "address");
+            mainActivity.ac.deleteAccount(mainActivity.username);
+
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            startActivity(intent);
+            mainActivity.finish();
         }
     }
 }
