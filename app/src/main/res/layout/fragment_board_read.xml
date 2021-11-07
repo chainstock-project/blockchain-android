@@ -51,14 +51,14 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/buttonBoardDelete"
+            android:id="@+id/buttonGoBoardDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:text="삭제" />
 
         <Button
-            android:id="@+id/buttonBoardUpdate"
+            android:id="@+id/buttonGoBoardUpdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="수정" />

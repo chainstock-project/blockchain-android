@@ -10,12 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stockchain.cosmos.Board;
+import com.stockchain.cosmos.Tools;
 
 import java.io.IOException;
 
@@ -32,15 +32,20 @@ public class BoardReadFragment extends Fragment {
 
 
         TextView boardReadTitle = rootView.findViewById(R.id.boardReadTitle);
-        boardReadTitle.setText(mainActivity.readBoardInform.getTitle());
+        boardReadTitle.setText(mainActivity.mainBoardInform.getTitle());
         TextView boardReadBody = rootView.findViewById(R.id.boardReadBody);
-        boardReadBody.setText(mainActivity.readBoardInform.getBody());
+        boardReadBody.setText(mainActivity.mainBoardInform.getBody());
 
-        Button buttonBoardDelete = rootView.findViewById(R.id.buttonBoardDelete);
-        buttonBoardDelete.setOnClickListener(new onClickBoardDeleteButton());
+        Button buttonBoardDelete = rootView.findViewById(R.id.buttonGoBoardDelete);
+        Button buttonBoardUpdate = rootView.findViewById(R.id.buttonGoBoardUpdate);
+        if(mainActivity.username.equals(mainActivity.mainBoardInform.getUsername())){
+            buttonBoardDelete.setOnClickListener(new onClickBoardDeleteButton());
+            buttonBoardUpdate.setOnClickListener(new onClickBoardUpdateButton());
+        }else{
+            buttonBoardDelete.setVisibility(View.INVISIBLE);
+            buttonBoardUpdate.setVisibility(View.INVISIBLE);
+        }
 
-        Button buttonBoardUpdate = rootView.findViewById(R.id.buttonBoardUpdate);
-        buttonBoardUpdate.setOnClickListener(new onClickBoardUpdateButton());
 
         // Inflate the layout for this fragment
         return rootView;
@@ -70,12 +75,13 @@ public class BoardReadFragment extends Fragment {
                 MainActivity mainActivity = (MainActivity)getActivity();
                 Board board = new Board(mainActivity.getApplicationContext());
 
-                String txHash = board.deleteBoard(mainActivity.username, mainActivity.readBoardInform.getId());
+                String txHash = board.deleteBoard(mainActivity.username, mainActivity.mainBoardInform.getId());
                 while(!mainActivity.bc.checkTxCommitted(txHash));
 
                 mainActivity.getSupportFragmentManager().popBackStack();
             } catch (IOException e) {
-                Tools.showDialog(rootView.getContext(), "게시", "삭제실패!!");
+                e.printStackTrace();
+                Tools.showDialog(getContext(), "게시", "삭제실패!");
             }
         }
     }
@@ -84,8 +90,7 @@ public class BoardReadFragment extends Fragment {
         @Override
         public void onClick(View view) {
             MainActivity mainActivity = (MainActivity)getActivity();
-            Board board = new Board(mainActivity.getApplicationContext());
-            mainActivity.getSupportFragmentManager().popBackStack();
+            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new BoardUpdateFragment()).addToBackStack(null).commit();
         }
     }
 }

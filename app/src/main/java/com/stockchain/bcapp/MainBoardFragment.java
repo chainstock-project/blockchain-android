@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -15,32 +16,70 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.stockchain.cosmos.Account;
-import com.stockchain.cosmos.Board;
 import com.stockchain.cosmos.BoardInform;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainBoardFragment extends Fragment {
+    FragmentTransaction ft;
+    RecyclerView boardRecyclerView;
+    BoardAdapter boardAdapter;
+    Fragment fg = this;
+
+    int page=1;
+    boolean flag=true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_board, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
 
-        RecyclerView boardRecyclerView = rootView.findViewById(R.id.boardRecyclerView);
+        fg=this;
+        boardRecyclerView = rootView.findViewById(R.id.boardRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         boardRecyclerView.setLayoutManager(layoutManager);
+        final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 
-        BoardAdapter boardAdapter = new BoardAdapter(mainActivity);
+        boardAdapter = new BoardAdapter(mainActivity);
         try {
-            Board board = new Board(mainActivity.getApplicationContext());
-            ArrayList<BoardInform> boardList = board.listBoardPage(1);
+            ArrayList<BoardInform> boardList = mainActivity.bd.listBoardPage(page);
             boardAdapter.setItems(boardList);
         } catch (IOException e) {}
         boardRecyclerView.setAdapter(boardAdapter);
-
+        boardRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (!boardRecyclerView.canScrollVertically(-1)) {
+                    if (flag) {
+                        try {
+                            page=1;
+                            ArrayList<BoardInform> boardList = mainActivity.bd.listBoardPage(page);
+                            boardAdapter.setItems(boardList);
+                            boardAdapter.notifyDataSetChanged();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        flag=false;
+                    }
+                } else if (!boardRecyclerView.canScrollVertically(1)) {
+                    if(flag) {
+                        try {
+                            page++;
+                            ArrayList<BoardInform> boardList = mainActivity.bd.listBoardPage(page);
+                            boardAdapter.addItems(boardList);
+                            boardAdapter.notifyItemRangeInserted(boardAdapter.items.size(), boardList.size());
+                        } catch (IOException e) {
+                            page--;
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    flag=true;
+                }
+            }
+        });
         FloatingActionButton goBoardCreateButton = (FloatingActionButton) rootView.findViewById(R.id.goBoardCreatebutton) ;
         goBoardCreateButton.setOnClickListener(new onClickGoBoardCreateButton());
 
@@ -91,6 +130,9 @@ public class MainBoardFragment extends Fragment {
         public  void setItems(ArrayList<BoardInform> items){
             this.items = items;
         }
+        public  void addItems(ArrayList<BoardInform> items){
+            this.items.addAll(items);
+        }
 
         public void setItem(int position, BoardInform item){
             items.set(position, item);
@@ -111,7 +153,7 @@ public class MainBoardFragment extends Fragment {
                     public void onClick(View view) {
                         int pos = getAdapterPosition() ;
                         if (pos != RecyclerView.NO_POSITION) {
-                            mainActivity.readBoardInform = getItem(pos);
+                            mainActivity.mainBoardInform = getItem(pos);
                             mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.boardReadFragment).addToBackStack(null).commit();
                         }
                     }

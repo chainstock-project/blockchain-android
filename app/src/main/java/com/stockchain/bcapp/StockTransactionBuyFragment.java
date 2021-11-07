@@ -116,10 +116,10 @@ public class StockTransactionBuyFragment extends Fragment {
                 String txhash = mainActivity.st.createStockTransaction(mainActivity.username, code, buyCount);
                 while(!mainActivity.bc.checkTxCommitted(txhash));
 
-                mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
-                mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
-                mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
-                stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
+                mainActivity.stockTransactionInformList = mainActivity.st.getStockTransactionInformList(mainActivity.address);
+                mainActivity.stockBankInform = mainActivity.st.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
+                mainActivity.stockTransactionRecordInformList = mainActivity.st.getStockTransactionRecord(mainActivity.address);
+                mainActivity.st.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
                 getParentFragmentManager().popBackStack();
             } catch (IOException e) {
                 Tools.showDialog(rootView.getContext(), "매수", "매수실퍠!");

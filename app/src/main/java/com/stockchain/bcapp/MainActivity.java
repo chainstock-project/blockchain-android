@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockDataInform> stockDataList;
     ArrayList<StockTransactionInform> stockTransactionInformList;
     ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList;
-    BoardInform readBoardInform;
+    BoardInform mainBoardInform;
     StockDataInform inqueryStockDataInform;
 
     public BottomNavigationView getBottomNavigationView() {

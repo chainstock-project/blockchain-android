@@ -14,25 +14,34 @@ import android.widget.EditText;
 import android.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.stockchain.cosmos.Board;
 import com.stockchain.cosmos.Tools;
 
 import java.io.IOException;
 
-public class BoardCreateFragment extends Fragment {
+public class BoardUpdateFragment extends Fragment {
+
     ViewGroup rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_create, container, false);
+        // Inflate the layout for this fragment
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_update, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
         ActionBar actionBar = mainActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
         bottomNavigationView.setVisibility(View.INVISIBLE);
 
-        Button boardCreateButton = rootView.findViewById(R.id.boardCreateButton);
-        boardCreateButton.setOnClickListener(new onClickBoardCreateButton());
+
+        EditText boardUpdateTitleInput = rootView.findViewById(R.id.boardUpdateTitleInput);
+        boardUpdateTitleInput.setText(mainActivity.mainBoardInform.getTitle());
+        EditText boardUpdateBodyInput = rootView.findViewById(R.id.boardUpdateBodyInput);
+        boardUpdateBodyInput.setText(mainActivity.mainBoardInform.getBody());
+
+        Button boardUpdateButton = rootView.findViewById(R.id.boardUpdateButton);
+        boardUpdateButton.setOnClickListener(new onClickBoardUpdateButton());
+
+
         return rootView;
     }
 
@@ -53,21 +62,23 @@ public class BoardCreateFragment extends Fragment {
         }
     }
 
-    class onClickBoardCreateButton implements Button.OnClickListener {
+    class onClickBoardUpdateButton implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
             try {
                 MainActivity mainActivity = (MainActivity)getActivity();
-                EditText boardTitleInput = rootView.findViewById(R.id.boardTitleInput);
-                EditText boardBodyInput = rootView.findViewById(R.id.boardBodyInput);
-
-                String txHash = mainActivity.bd.createBoard(mainActivity.username, boardTitleInput.getText().toString(), boardBodyInput.getText().toString());
+                EditText boardUpdateTitleInput = rootView.findViewById(R.id.boardUpdateTitleInput);
+                EditText boardUpdateBodyInput = rootView.findViewById(R.id.boardUpdateBodyInput);
+                mainActivity.mainBoardInform.getId();
+                mainActivity.mainBoardInform.setTitle(boardUpdateTitleInput.getText().toString());
+                mainActivity.mainBoardInform.setBody(boardUpdateBodyInput.getText().toString());
+                String txHash = mainActivity.bd.updateBoard(mainActivity.username, mainActivity.mainBoardInform.getId(), mainActivity.mainBoardInform.getTitle(), mainActivity.mainBoardInform.getBody());
                 while(!mainActivity.bc.checkTxCommitted(txHash));
 
                 mainActivity.getSupportFragmentManager().popBackStack();
             } catch (IOException e) {
                 e.printStackTrace();
-                Tools.showDialog(rootView.getContext(), "게시판", "게시판생성실패!!");
+                Tools.showDialog(rootView.getContext(), "게시", "게시판수정실패!!");
             }
         }
     }

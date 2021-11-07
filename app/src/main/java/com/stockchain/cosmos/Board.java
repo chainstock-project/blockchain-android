@@ -53,14 +53,30 @@ public class Board {
         return pageCount;
     }
 
+    public int getBoardPageCount() throws IOException {
+        int  count = getBoardCount();
+        int pageCount = count/15;
+        if (count % 15 > 0) {
+            pageCount++;
+        }
+        return pageCount;
+    }
+
     public ArrayList<BoardInform> listBoardPage(int page) throws IOException {
-        int pageCount = getBoardPageCount(getBoardCount());
+        int boardCount = getBoardCount();
+        int pageCount = getBoardPageCount(boardCount);
         if(page > pageCount || page < 1) {
             throw new IOException("invalid page");
         }
 
-        int offset = (page-1)*15;
-        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-board", "--page", String.valueOf(page), "--limit", "15", "--offset", String.valueOf(offset), "--count-total", "--home", homeDir);
+        int offset = boardCount - (page*15);
+        int limit = 15;
+        if(offset<0){
+            offset=0;
+            limit+=offset;
+        }
+
+        ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-board", "--limit", String.valueOf(limit), "--offset", String.valueOf(offset), "--count-total", "--home", homeDir);
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
@@ -75,8 +91,8 @@ public class Board {
                     break;
                 }
 
-                String[] line_split = line.split("body:");
-                String body = line_split[line_split.length - 1];
+                String[] line_split = line.split("body: ");
+                String body = line_split[line_split.length - 1].replace("\"","");
 
                 line = stdOut.readLine();
                 line_split = line.split(" ");
@@ -88,8 +104,8 @@ public class Board {
                 int id = (int) Double.parseDouble(line_split[line_split.length - 1].replace("\"",""));
 
                 line = stdOut.readLine();
-                line_split = line.split("title:");
-                String title = line_split[line_split.length - 1];
+                line_split = line.split("title: ");
+                String title = line_split[line_split.length - 1].replace("\"","");
 
                 BoardInform boardInform = new BoardInform(id, title, body, username);
                 boardInformList.add(boardInform);

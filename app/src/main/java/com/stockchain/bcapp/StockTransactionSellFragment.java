@@ -105,7 +105,7 @@ public class StockTransactionSellFragment extends Fragment {
 
     class onClickButtonSell implements Button.OnClickListener {
         @Override
-        public void onClick(cView view) {
+        public void onClick(View view) {
             try {
                 EditText sellCountInput = rootView.findViewById(R.id.sellCountInput);
                 int sellCount = Integer.parseInt(sellCountInput.getText().toString());
@@ -114,10 +114,10 @@ public class StockTransactionSellFragment extends Fragment {
                 String txHash = mainActivity.st.deleteStockTransaction(mainActivity.username, code, sellCount);
                 while(!mainActivity.bc.checkTxCommitted(txHash));
 
-                mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
-                mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
-                stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
-                mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
+                mainActivity.stockTransactionInformList = mainActivity.st.getStockTransactionInformList(mainActivity.address);
+                mainActivity.stockTransactionRecordInformList = mainActivity.st.getStockTransactionRecord(mainActivity.address);
+                mainActivity.st.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
+                mainActivity.stockBankInform = mainActivity.st.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
                 getParentFragmentManager().popBackStack();
                 getParentFragmentManager().popBackStack();
             } catch (IOException e) {
