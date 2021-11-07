@@ -128,8 +128,8 @@ public class MainStockInqueryFragment extends Fragment{
         @Override
         public void onClick(View view) {
             MainActivity mainActivity = (MainActivity)getActivity();
-            MainStockTransactionFragment mainStockTransactionFragment = new MainStockTransactionFragment();
-            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainStockTransactionFragment).addToBackStack(null).commit();
+            mainActivity.mainStockTransactionFragment = new MainStockTransactionFragment();
+            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainActivity.mainStockTransactionFragment).addToBackStack(null).commit();
         }
     }
 }

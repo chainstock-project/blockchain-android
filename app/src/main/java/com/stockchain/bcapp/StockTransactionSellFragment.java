@@ -120,6 +120,7 @@ public class StockTransactionSellFragment extends Fragment {
                 if (stockTransaction.checkStockTransactionCreated(mainActivity.address, code, afterNumberOfStock)) {
                     mainActivity.stockTransactionInformList = stockTransaction.getStockTransactionInformList(mainActivity.address);
                     mainActivity.stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(mainActivity.address);
+                    stockTransaction.addStockTransactionRecordDate(mainActivity.stockTransactionRecordInformList);
                     mainActivity.stockBankInform = stockTransaction.getStockBankInform(mainActivity.stockTransactionInformList, mainActivity.address);
                     getParentFragmentManager().popBackStack();
                     getParentFragmentManager().popBackStack();

@@ -66,9 +66,11 @@ public class MainHomeFragment extends Fragment {
         //set graph
         kospiChart= (LineChart)rootView.findViewById(R.id.kospiChart);
         ArrayList<Entry> kospiEntryMonth = StockData.getKospiEntryMonth();
-        LineDataSet kospiSet1 = new LineDataSet(kospiEntryMonth, "kospi price 1");
+        LineDataSet kospiSet1 = new LineDataSet(kospiEntryMonth, "price");
         kospiSet1.setColor(Color.RED);
         kospiSet1.setDrawCircles(false);
+        kospiSet1.setDrawValues(false);
+
         ArrayList<ILineDataSet> kospiDataSets = new ArrayList<>();
         kospiDataSets.add(kospiSet1); // add the data sets
         LineData kospiData = new LineData(kospiDataSets);
@@ -77,20 +79,20 @@ public class MainHomeFragment extends Fragment {
         kospiXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         kospiChart.setData(kospiData);
 
-
         kosdaqChart= (LineChart)rootView.findViewById(R.id.kosdaqChart);
         ArrayList<Entry> kosdaqEntryMonth = StockData.getKosdaqEntryMonth();
-        LineDataSet kosdaqSet1 = new LineDataSet(kosdaqEntryMonth, "DataSet 1");
+        LineDataSet kosdaqSet1 = new LineDataSet(kosdaqEntryMonth, "price");
         kosdaqSet1.setColor(Color.RED);
         kosdaqSet1.setDrawCircles(false);
+        kosdaqSet1.setDrawValues(false);
         ArrayList<ILineDataSet> kosdaqDataSets = new ArrayList<>();
         kosdaqDataSets.add(kosdaqSet1); // add the data sets
         LineData kosdaqData = new LineData(kosdaqDataSets);
         XAxis kosdaqXAxis= kosdaqChart.getXAxis();
         kosdaqXAxis.setValueFormatter(new LineChartXAxisValueFormatter());
         kosdaqXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
         kosdaqChart.setData(kosdaqData);
+
 
         return rootView;
     }

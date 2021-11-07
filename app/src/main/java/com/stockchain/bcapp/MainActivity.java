@@ -11,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.stockchain.cosmos.BlockChain;
+import com.stockchain.cosmos.Board;
+import com.stockchain.cosmos.BoardInform;
 import com.stockchain.cosmos.PreferenceManager;
 import com.stockchain.cosmos.StockBankInform;
 import com.stockchain.cosmos.StockData;
-import com.stockchain.cosmos.StockDataDetailInform;
 import com.stockchain.cosmos.StockDataInform;
 import com.stockchain.cosmos.StockTransaction;
 import com.stockchain.cosmos.StockTransactionInform;
@@ -31,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
     Menu menu;
     String username;
     String address;
+    BlockChain bc;
     StockDataInform inqueryStockDataInform;
+    BoardInform readBoardInform;
     ArrayList<StockTransactionInform> stockTransactionInformList;
     ArrayList<StockDataInform> stockDataList;
     ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList;
@@ -39,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
     MainHomeFragment mainHomeFragment;
     MainFeedFragment mainFeedFragment;
-    MainRankFragment mainRankFragment;
+    MainBoardFragment mainBoardFragment;
     MainSettingFragment mainSettingFragment;
     MainSearchFragment mainSearchFragment;
     MainStockInqueryFragment mainStockInqueryFragment;
-//    MainStockTransactionFragment mainStockTransactionFragment;
+    MainStockTransactionFragment mainStockTransactionFragment;
+    BoardReadFragment boardReadFragment;
 
     SearchView searchView;
     BottomNavigationView bottomNavigationView;
@@ -56,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
     MockStockTransactionRecordAdapter mockRecordAdapter;
     RecyclerView feedRecyclerView;
     FeedAdapter feedAdapter;
-    RecyclerView rankRecyclerView;
-    RankAdapter rankAdapter;
+    RecyclerView boardRecyclerView;
+    BoardAdapter boardAdapter;
 
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
@@ -84,7 +89,20 @@ public class MainActivity extends AppCompatActivity {
             StockTransaction stockTransaction = new StockTransaction(getApplicationContext());
             stockTransactionInformList = stockTransaction.getStockTransactionInformList(address);
             stockTransactionRecordInformList = stockTransaction.getStockTransactionRecord(address);
-            stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);
+            stockTransaction.addStockTransactionRecordDate(stockTransactionRecordInformList);
+            stockBankInform = stockTransaction.getStockBankInform(stockTransactionInformList, address);;
+            bc = new BlockChain(getApplicationContext(), getString(R.string.server_ip));
+
+//            Board board = new Board(getApplicationContext());
+//            try {
+//                String tx = board.createBoard(username, "test title", "test body");
+//                boolean check = bc.checkTxCommitted(tx);
+//                boolean check2 = bc.checkTxCommitted(tx);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
 
             StockData stockData = new StockData(getApplicationContext());
             stockDataList = stockData.getStockDataList();
@@ -92,11 +110,12 @@ public class MainActivity extends AppCompatActivity {
         }
         mainHomeFragment = new MainHomeFragment();
         mainFeedFragment = new MainFeedFragment();
-        mainRankFragment = new MainRankFragment();
+        mainBoardFragment = new MainBoardFragment();
         mainSettingFragment = new MainSettingFragment();
         mainSearchFragment = new MainSearchFragment();
         mainStockInqueryFragment = new MainStockInqueryFragment();
-//        mainStockTransactionFragment = new MainStockTransactionFragment();
+        mainStockTransactionFragment = new MainStockTransactionFragment();
+        boardReadFragment = new BoardReadFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainHomeFragment).addToBackStack(null).commit();
 
@@ -115,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_bottom_feed:
                         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainFeedFragment).commit();
                         return true;
-                    case R.id.menu_bottom_rank:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainRankFragment).commit();
+                    case R.id.menu_bottom_board:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainBoardFragment).commit();
                         return true;
                     case R.id.menu_bottom_setting:
                         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, mainSettingFragment).commit();

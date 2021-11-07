@@ -197,6 +197,17 @@ public class StockTransaction {
         }
     }
 
+    public void addStockTransactionRecordDate(ArrayList<StockTransactionRecordInform> list){
+        StockTransactionRecordInform record = new StockTransactionRecordInform(list.get(0).date, "DATE");
+        list.add(0,record);
+        for(int i=0;i<list.size();i++){
+            if(!record.date.equals(list.get(i).date)){
+                record = new StockTransactionRecordInform(list.get(i).date, "DATE");
+                list.add(i,record);
+            }
+        }
+    }
+
     public ArrayList<StockTransactionInform> getStockTransactionTop3(ArrayList<StockTransactionInform> stockTransactionInformList) throws IOException {
         Collections.sort(stockTransactionInformList);
         return stockTransactionInformList;

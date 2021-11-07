@@ -6,12 +6,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Board {
+    private Context ctx;
     private final String blockchainPath;
     private final String homeDir;
 
     public Board(Context ctx) {
+        this.ctx = ctx;
         this.blockchainPath = ctx.getApplicationInfo().nativeLibraryDir + "/blockchaind.so";
         this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
 
@@ -50,8 +53,8 @@ public class Board {
         return pageCount;
     }
 
-    public ArrayList<BoardInform> listBoardPage(int count, int page) throws IOException {
-        int pageCount = getBoardPageCount(count);
+    public ArrayList<BoardInform> listBoardPage(int page) throws IOException {
+        int pageCount = getBoardPageCount(getBoardCount());
         if(page > pageCount || page < 1) {
             throw new IOException("invalid page");
         }
@@ -59,48 +62,54 @@ public class Board {
         int offset = (page-1)*15;
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-board", "--page", String.valueOf(page), "--limit", "15", "--offset", String.valueOf(offset), "--count-total", "--home", homeDir);
         Process process = builder.start();
-
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
         }else {
             ArrayList<BoardInform> boardInformList = new ArrayList<>();
+            Account ac = new Account(ctx);
+            ArrayList<AccountInform> userList = ac.getUserList();
             while ((line = stdOut.readLine()) != null) {
-                if(line.equals("pagination:")){
-                    stdOut.readLine();
-                    line = stdOut.readLine();
-                    String[] line_split = line.split(" ");
-                    int new_count = (int) Double.parseDouble(line_split[line_split.length - 1].replace("\"",""));
-
-                    if (new_count != count){
-                        throw new IOException("count diffrent");
-                    }
+                 if(line.equals("pagination:")){
+//                    stdOut.readLine();
+//                    line = stdOut.readLine();
+//                    String[] line_split = line.split(" ");
+//                    int new_count = (int) Double.parseDouble(line_split[line_split.length - 1].replace("\"",""));
+//
+//                    if (new_count != count){
+//                        throw new IOExceptio
+//                        n("count diffrent");
+//                    }                ;
                     break;
                 }
 
-                String[] line_split = line.split(" ");
+                String[] line_split = line.split("body:");
                 String body = line_split[line_split.length - 1];
 
-                String creator = stdOut.readLine();
+                line = stdOut.readLine();
+                line_split = line.split(" ");
+                String creator = line_split[line_split.length - 1];
+                String username = ac.getUsernameByAddress(userList, creator);
 
                 line = stdOut.readLine();
                 line_split = line.split(" ");
                 int id = (int) Double.parseDouble(line_split[line_split.length - 1].replace("\"",""));
 
                 line = stdOut.readLine();
-                line_split = line.split(" ");
+                line_split = line.split("title:");
                 String title = line_split[line_split.length - 1];
 
-                BoardInform boardInform = new BoardInform(id, title, body);
+                BoardInform boardInform = new BoardInform(id, title, body, username);
                 boardInformList.add(boardInform);
             }
 
+            Collections.reverse(boardInformList);
             return boardInformList;
         }
     }
 
-    public void createBoard (String username, String title, String body) throws IOException {
+    public String createBoard (String username, String title, String body) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "tx", "blockchain", "create-board", title, body, "--from", username, "--keyring-backend", "test", "--home", homeDir, "--chain-id", "stock-chain", "--gas=auto", "-y");
         Process process = builder.start();
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -109,22 +118,34 @@ public class Board {
         if (line == null) {
             throw new IOException((new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine());
         }
+        else{
+            String tx="";
+            while(line != null){
+                tx = line;
+                line = stdOut.readLine();
+            }
+            return tx.substring(8);
+        }
     }
 
     public BoardInform getBoard(String username, int id) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "show-board", String.valueOf(id), "--home", homeDir);
         Process process = builder.start();
-
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException("dosen't exists");
         } else {
+            Account ac = new Account(ctx);
+            ArrayList<AccountInform> userList = ac.getUserList();
+
             line = stdOut.readLine();
             String[] line_split = line.split(" ");
             String body = line_split[line_split.length - 1];
 
-            String creator = stdOut.readLine();
+            line = stdOut.readLine();
+            line_split = line.split(" ");
+            String creator = line_split[line_split.length - 1];
 
             line = stdOut.readLine();
             line_split = line.split(" ");
@@ -134,7 +155,7 @@ public class Board {
             line_split = line.split(" ");
             String title = line_split[line_split.length - 1];
 
-            BoardInform boardInform = new BoardInform(get_id, title, body);
+            BoardInform boardInform = new BoardInform(get_id, title, body, username);
             return boardInform;
         }
     }

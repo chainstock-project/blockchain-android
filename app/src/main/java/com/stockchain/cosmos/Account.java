@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ public class Account {
         this.blockchainPath = ctx.getApplicationInfo().nativeLibraryDir + "/blockchaind.so";
         this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
         this.serverIp = serverIp;
+    }
+    public Account(Context ctx) {
+        this.ctx = ctx;
+        this.blockchainPath = ctx.getApplicationInfo().nativeLibraryDir + "/blockchaind.so";
+        this.homeDir = ctx.getFilesDir().getAbsolutePath() + "/.blockchaind";
     }
 
     public ArrayList<WalletInform> getWalletList() throws IOException {
@@ -221,6 +227,48 @@ public class Account {
                 return address;
             }
     }
+
+    public ArrayList<AccountInform> getUserList(){
+        ArrayList<AccountInform> list = new ArrayList<>();
+        try{
+            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "blockchain", "list-user", "--home", homeDir);
+            Process process = builder.start();
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = stdOut.readLine();
+            while((line = stdOut.readLine())!=null){
+                if(line.equals("pagination:")){
+                    break;
+                }
+
+                String[] lineSplit = line.split(" ");
+                String address = lineSplit[lineSplit.length-1];
+
+                line = stdOut.readLine();
+                lineSplit = line.split(" ");
+                String creator = lineSplit[lineSplit.length-1];
+
+                line = stdOut.readLine();
+                lineSplit = line.split("name: ");
+                String name = lineSplit[lineSplit.length-1];
+                list.add(new AccountInform(name, address));
+            }
+            return list;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return list;
+        }
+    }
+
+    public String getUsernameByAddress(ArrayList<AccountInform> list, String address) throws IOException {
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getAddress().equals(address)){
+                return list.get(i).getUsername();
+            }
+        }
+        return address;
+    }
+
+
     public boolean checkLogin(String username){
         try {
             String localAddress = getAddressByUsernameLocal(username);

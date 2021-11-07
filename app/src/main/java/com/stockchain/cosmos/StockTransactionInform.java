@@ -26,6 +26,8 @@ public class StockTransactionInform implements Comparable<StockTransactionInform
         this.earningPrice = earningPrice;
     }
 
+
+
     @Override
     public int compareTo(StockTransactionInform stockTransactionInform) {
         Long a = new Long(this.currentAmount);

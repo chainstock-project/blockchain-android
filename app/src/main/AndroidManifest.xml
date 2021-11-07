@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BCapp"
         android:usesCleartextTraffic="true">
-
         <activity
             android:name=".LoadingActivity"
             android:exported="true"
@@ -31,12 +30,11 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.BCapp.NoActionBar"></activity>
+            android:theme="@style/Theme.BCapp.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="Main">
-        </activity>
+            android:label="Main"></activity>
 
         <service android:name="com.stockchain.cosmos.BlockChainService" />
     </application>

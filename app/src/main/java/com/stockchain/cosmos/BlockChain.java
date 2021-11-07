@@ -368,4 +368,21 @@ public class BlockChain {
         }
         return true;
     }
+
+    public boolean checkTxCommitted(String tx){
+        try {
+            ProcessBuilder builder = new ProcessBuilder(this.blockchainPath, "query", "tx", tx, "--home", homeDir);
+            Process process = builder.start();
+
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            if(stdOut.readLine() == null){
+                return false;
+            }
+            else {
+                return true;
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
 }

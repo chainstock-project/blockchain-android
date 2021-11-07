@@ -165,11 +165,14 @@ public class StockData {
                     String faceValue = "N/A";
                     try{
                         faceValue = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(1)").get(0).text();
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        marketRanking = "N/A";
+                    }
                     String tradingUnit = "N/A";
                     try{
                         tradingUnit = document.select("#tab_con1 > div.first > table > tbody > tr:nth-child(4) > td > em:nth-child(3)").get(0).text();
                     }catch (Exception e){}
+
 
                     String PER="N/A";
                     try{
@@ -185,7 +188,7 @@ public class StockData {
                     }catch (Exception e){}
                     String BPS="N/A";
                     try{
-                        BPS = document.select("#tab_con1 > div:nth-child(5) > table > tbody:nth-child(3) > tr:nth-child(2) > td > em:nth-child(3)").get(0).text();
+                        BPS = document.select("#_pbr~em").get(0).text();
                     }catch (Exception e){}
                     String sameInderstryPER = "N/A";
                     try {
