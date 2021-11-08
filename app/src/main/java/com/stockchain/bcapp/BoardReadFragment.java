@@ -27,6 +27,8 @@ public class BoardReadFragment extends Fragment {
         MainActivity mainActivity = (MainActivity)getActivity();
         ActionBar actionBar = mainActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        MenuItem item = mainActivity.menu.findItem(R.id.menu_search);
+        item.setVisible(false);
         BottomNavigationView bottomNavigationView = mainActivity.getBottomNavigationView();
         bottomNavigationView.setVisibility(View.INVISIBLE);
 

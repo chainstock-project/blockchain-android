@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stockchain.cosmos.PreferenceManager;
@@ -19,6 +20,11 @@ public class MainSettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_setting, container, false);
+        MainActivity mainActivity = (MainActivity)getActivity();
+
+        TextView settingUsername = rootView.findViewById(R.id.settingUsername);
+        settingUsername.setText(mainActivity.username);
+
         Button buttonLogout = (Button)rootView.findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(new onClickButtonLogout());
         return rootView;
