@@ -19,7 +19,7 @@
     <item
         app:showAsAction="ifRoom"
         android:id="@+id/menu_bottom_board"
-        android:icon="@drawable/menu_bottom_rank"
+        android:icon="@drawable/menu_bottom_board"
         android:title="게시판" />
     <item
         app:showAsAction="ifRoom"

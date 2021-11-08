@@ -174,12 +174,13 @@ public class StockTransaction {
         BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         String line = stdOut.readLine();
+        ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList = new ArrayList<>();
+
         if (line == null) {
-            throw new IOException("dosen't exists");
+            return stockTransactionRecordInformList;
         }else {
             stdOut.readLine(); stdOut.readLine();
 
-            ArrayList<StockTransactionRecordInform> stockTransactionRecordInformList = new ArrayList<>();
             StockData stockData = new StockData(ctx);
             while ((line = stdOut.readLine()) != null) {
                 String[] line_split = line.split(" ");
@@ -213,6 +214,9 @@ public class StockTransaction {
     }
 
     public void addStockTransactionRecordDate(ArrayList<StockTransactionRecordInform> list){
+        if(list.size()==0){
+            return;
+        }
         StockTransactionRecordInform record = new StockTransactionRecordInform(list.get(0).date, "DATE");
         list.add(0,record);
         for(int i=0;i<list.size();i++){
