@@ -59,7 +59,7 @@ public class MainStockInqueryFragment extends Fragment{
         TextView textDayOverDayAmount = rootView.findViewById(R.id.textDayOverDayAmount);
         textDayOverDayAmount.setText(stockDataDetailInform.getDayOverDayAmount());
         TextView textDayOverDayRate = rootView.findViewById(R.id.textDayOverDayRate);
-        textDayOverDayRate.setText(stockDataDetailInform.getDayOverDayRate());
+        textDayOverDayRate.setText(String.format("%.2f",Float.parseFloat(stockDataDetailInform.getDayOverDayRate())));
 
         if(Float.parseFloat(stockDataDetailInform.getDayOverDayRate()) < 0){
             textDayOverDayAmount.setTextColor(Color.parseColor("#ed3738"));

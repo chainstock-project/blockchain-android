@@ -26,13 +26,12 @@
 
         <EditText
             android:id="@+id/boardTitleInput"
-            android:padding="16dp"
-            android:background="#eeeeee"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
+            android:background="#eeeeee"
             android:hint="제목을 입력하세요."
-            />
+            android:padding="16dp" />
     </LinearLayout>
 
     <TextView

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,11 @@ public class BoardReadFragment extends Fragment {
 
         TextView boardReadTitle = rootView.findViewById(R.id.boardReadTitle);
         boardReadTitle.setText(mainActivity.mainBoardInform.getTitle());
+        boardReadTitle.setMovementMethod(new ScrollingMovementMethod());
+
         TextView boardReadBody = rootView.findViewById(R.id.boardReadBody);
         boardReadBody.setText(mainActivity.mainBoardInform.getBody());
+        boardReadBody.setMovementMethod(new ScrollingMovementMethod());
 
         Button buttonBoardDelete = rootView.findViewById(R.id.buttonGoBoardDelete);
         Button buttonBoardUpdate = rootView.findViewById(R.id.buttonGoBoardUpdate);

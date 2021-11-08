@@ -86,16 +86,35 @@ public class Board {
             ArrayList<BoardInform> boardInformList = new ArrayList<>();
             Account ac = new Account(ctx);
             ArrayList<AccountInform> userList = ac.getUserList();
-            while ((line = stdOut.readLine()) != null) {
+            line = stdOut.readLine();
+            while (line != null) {
                  if(line.equals("pagination:")){
                     break;
                 }
 
-                String[] line_split = line.split("body: ");
-                String body = line_split[line_split.length - 1].replace("\"","");
+                 String body = line.substring(8).replace("\"","")+"\n";
+                 if(body.length()!=0) {
+                     if (body.charAt(0) == '|') {
+                         body = "";
+                     }
+                 }
+                while (true) {
+                    line = stdOut.readLine();
+                    if(line.length()==0){
+                        body = body + "\n";
+                    }
+                    else if(line.length()<9){
+                        body = body + line.substring(4) + "\n";
+                    }
+                    else if(line.substring(2, 9).equals("creator")){
+                        break;
+                    }
+                    else{
+                        body = body + line.substring(4)+ "\n";
+                    }
+                }
 
-                line = stdOut.readLine();
-                line_split = line.split(" ");
+                String[] line_split = line.split(" ");
                 String creator = line_split[line_split.length - 1];
                 String username = ac.getUsernameByAddress(userList, creator);
 
@@ -106,6 +125,11 @@ public class Board {
                 line = stdOut.readLine();
                 line_split = line.split("title: ");
                 String title = line_split[line_split.length - 1].replace("\"","");
+                line = stdOut.readLine();
+                while(line.length()<6 || !line.substring(2, 6).equals("body") && !line.equals("pagination:")){
+                    title = title + "\n" +line.substring(4);
+                    line = stdOut.readLine();
+                }
 
                 BoardInform boardInform = new BoardInform(id, title, body, username);
                 boardInformList.add(boardInform);
@@ -156,6 +180,7 @@ public class Board {
         String line = stdOut.readLine();
         if (line == null) {
             throw new IOException((new BufferedReader(new InputStreamReader(process.getErrorStream()))).readLine());
+
         }
         else{
             String tx="";

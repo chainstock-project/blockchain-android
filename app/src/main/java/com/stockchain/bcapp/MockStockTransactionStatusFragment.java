@@ -129,7 +129,7 @@ public class MockStockTransactionStatusFragment extends Fragment {
 
             public void setItem(StockTransactionInform item){
                 holdingStockName.setText(item.getName());
-                holdingStockEarningRate.setText(String.valueOf(item.getEarningPrice()));
+                holdingStockEarningRate.setText(String.format("%.2f", item.getEarningPrice()));
                 if(item.getEarningPrice()<0){
                     holdingStockEarningRate.setTextColor(Color.parseColor("#ed3738"));
                 }else{
