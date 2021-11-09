@@ -33,8 +33,10 @@ public class MockStockTransactionStatusFragment extends Fragment {
         TextView mockTotalEarningRate = rootView.findViewById(R.id.mockTotalEarningRate);
         mockTotalEarningRate.setText(String.format("%.2f", mainActivity.stockBankInform.getEarningRate()));
         if(mainActivity.stockBankInform.getEarningRate()<0){
+            mockTotalEarningRate.setText("-"+mockTotalEarningRate.getText());
             mockTotalEarningRate.setTextColor(Color.parseColor("#097df3"));
         }else{
+            mockTotalEarningRate.setText("+"+mockTotalEarningRate.getText());
             mockTotalEarningRate.setTextColor(Color.parseColor("#ed3738"));
         }
         TextView mockBalances = rootView.findViewById(R.id.mockBalances);
@@ -131,16 +133,18 @@ public class MockStockTransactionStatusFragment extends Fragment {
                 holdingStockName.setText(item.getName());
                 holdingStockEarningRate.setText(String.format("%.2f", item.getEarningPrice()));
                 if(item.getEarningPrice()<0){
+                    holdingStockEarningRate.setText("-"+holdingStockEarningRate.getText());
                     holdingStockEarningRate.setTextColor(Color.parseColor("#097df3"));
                 }else{
+                    holdingStockEarningRate.setText("+"+holdingStockEarningRate.getText());
                     holdingStockEarningRate.setTextColor(Color.parseColor("#ed3738"));
                 }
                 holdingStockCount.setText(String.valueOf(item.getCount()+"주"));
                 holdingStockCurrentPrice.setText(String.valueOf(item.getCurrentAmount()));
                 if(item.getCurrentAmount()<item.getPurchaseAmount()){
-                    holdingStockEarningRate.setTextColor(Color.parseColor("#097df3"));
+                    holdingStockCurrentPrice.setTextColor(Color.parseColor("#097df3"));
                 }else{
-                    holdingStockEarningRate.setTextColor(Color.parseColor("#ed3738"));
+                    holdingStockCurrentPrice.setTextColor(Color.parseColor("#ed3738"));
                 }
                 holdingStockPurchasePrice.setText(String.valueOf(item.getPurchaseAmount()));
 
