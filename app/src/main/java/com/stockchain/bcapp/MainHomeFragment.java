@@ -51,9 +51,9 @@ public class MainHomeFragment extends Fragment {
         TextView assetTotalEarningPrice = rootView.findViewById(R.id.assetTotalEarningPrice);
         assetTotalEarningPrice.setText(String.format("%.2f", mainActivity.stockBankInform.getEarningRate()));
         if(mainActivity.stockBankInform.getEarningRate()<0){
-            assetTotalEarningPrice.setTextColor(Color.parseColor("#ed3738"));
-        }else{
             assetTotalEarningPrice.setTextColor(Color.parseColor("#097df3"));
+        }else{
+            assetTotalEarningPrice.setTextColor(Color.parseColor("#ed3738"));
         }
         TextView assetBalances = rootView.findViewById(R.id.assetBalances);
         assetBalances.setText(String.valueOf(mainActivity.stockBankInform.getBalances()));

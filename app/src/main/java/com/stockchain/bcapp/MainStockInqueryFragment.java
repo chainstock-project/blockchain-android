@@ -62,12 +62,10 @@ public class MainStockInqueryFragment extends Fragment{
         textDayOverDayRate.setText(String.format("%.2f",Float.parseFloat(stockDataDetailInform.getDayOverDayRate())));
 
         if(Float.parseFloat(stockDataDetailInform.getDayOverDayRate()) < 0){
-            textDayOverDayAmount.setTextColor(Color.parseColor("#ed3738"));
-            textDayOverDayRate.setTextColor(Color.parseColor("#ed3738"));
+            textDayOverDayAmount.setTextColor(Color.parseColor("#097df3"));
         }
         else{
-            textDayOverDayAmount.setTextColor(Color.parseColor("#097df3"));
-            textDayOverDayRate.setTextColor(Color.parseColor("#097df3"));
+            textDayOverDayAmount.setTextColor(Color.parseColor("#ed3738"));
         }
 
         TextView textPreviousCloseAmount = rootView.findViewById(R.id.previousCloseAmount);
